@@ -2,15 +2,17 @@ import javax.swing.*;
 import java.awt.*;
 
 public class View extends JFrame {
+    Controller controller;
     protected JButton analyzeButton;
     protected JButton uploadButton;
     protected JLabel imageIcon;
 
-    public View() {
+    public View(Controller con) {
         super("Welcome");
+        this.controller = con;
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(1000, 900));
+        setPreferredSize(new Dimension(900, 800));
 
         setUpUI();
         pack();
@@ -21,25 +23,39 @@ public class View extends JFrame {
         JPanel contentPanel = (JPanel) getContentPane();
 
         //the image and save button are part of a vertical box layout
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        //JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BorderLayout(10, 10));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5 ,5, 5));
 
-        JLabel infoLabel = new JLabel("Upload an image, and I will tell you what the most common colors are." +
-                "It will be an adventure.");
-        contentPanel.add(infoLabel);
+        JLabel infoLabel = new JLabel("Upload an image. Please." +
+                " It will be an adventure.");
+        infoLabel.setFont(new Font("serif", Font.PLAIN, 24));
+        infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        contentPanel.add(infoLabel, BorderLayout.NORTH);
 
-        imageIcon = new JLabel(new ImageIcon("images/upload-button.png"));
-        contentPanel.add(imageIcon);
+        imageIcon = new JLabel(new ImageIcon("images/blank-image.jpg"));
 
+        uploadButton = new JButton(new ImageIcon("images/upload.png"));
+
+        //create a new panel for the CENTER of our contentPanel
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        uploadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        imageIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(imageIcon);
+        centerPanel.add(uploadButton);
+
+        //add the center panel to the overall content panel
+        contentPanel.add(centerPanel, BorderLayout.CENTER);
 
         analyzeButton = new JButton("Analyze");
-
-
-        uploadButton = new JButton("Upload Image");
-
+        analyzeButton.setVisible(false);
+        analyzeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(analyzeButton);
 
         JPanel colorViewOutput = new JPanel();
         colorViewOutput.setLayout(new GridLayout(2, 5));
-
+        contentPanel.add(colorViewOutput, BorderLayout.SOUTH);
 
     }
 

@@ -14,8 +14,7 @@ public class Controller {
     protected Image image;
     protected BufferedImage bufferedImage = null;
 
-    public Controller(Model model) {
-        this.model = model;
+    public Controller() {
         this.view = new View(this);
 
         //anon class to allow th user to upload an image
@@ -32,14 +31,13 @@ public class Controller {
 
                 //do this stuff if the image is legit
                 if(returnVal == JFileChooser.APPROVE_OPTION){
-                    String fileName = file.getAbsolutePath();
-
                     //trying to resize the image
                     try {
                         bufferedImage = ImageIO.read(fileChooser.getSelectedFile());
                     }catch(IOException m){
                         m.printStackTrace();
                     }
+                    //setting image to size of JPanel
                     image = bufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
 
                     //if all is good, update the image view
@@ -47,11 +45,23 @@ public class Controller {
                     ImageIcon imageIcon = new ImageIcon(image);
                     view.imageIcon.setIcon(imageIcon);
                     view.analyzeButton.setVisible(true);
-
+                    //start the model outside of the ANON class so it doesnt have to be final
+                }else{
+                    JOptionPane.showMessageDialog(null, "Invalid file type. Cmon.", "Nope", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });//end imageUploadButton anon class
-    }
+
+
+        view.analyzeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model = new Model(bufferedImage);
+            }
+        });
+
+    }//end constructor
+
 }//end class
 
 

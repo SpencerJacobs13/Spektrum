@@ -4,6 +4,7 @@ import java.util.*;
 public class Model {
     Controller controller;
     BufferedImage image;
+    protected String colorHex;
 
     public Model(BufferedImage image){
         this.image = image;
@@ -32,13 +33,14 @@ public class Model {
             }
         }//outer
 
-        String colourHex = getMostCommonColour(pixelMap);
-        System.out.println(colourHex);
+        colorHex = getMostCommonColour(pixelMap);
+        System.out.println(colorHex);
 
     }//getImageColors
 
     private String getMostCommonColour(Map map){
         List list = new LinkedList(map.entrySet());
+
         Collections.sort(list, new Comparator() {
             @Override
             public int compare(Object o1, Object o2) {
@@ -46,15 +48,16 @@ public class Model {
                         .compareTo(((Map.Entry) (o2)).getValue());
             }
         });
-        Map.Entry me = (Map.Entry)list.get(list.size()-1);
+        Map.Entry me = (Map.Entry)list.get(list.size() - 1);
         int[] rgb = getRGBArray((Integer)me.getKey());
 
-        return "#" + Integer.toHexString(rgb[0]) + " " + Integer.toHexString(rgb[1]) + " " + Integer.toHexString(rgb[2]);
+
+        return Integer.toHexString(rgb[0]) + Integer.toHexString(rgb[1]) + Integer.toHexString(rgb[2]);
     }
 
-    //extracting the RGBArray colors for each pixel. returns an array of ints that
+    //extracting the RGBArray colors for each pixel. returns an array of ints that represent red, green, and blue
     private int[] getRGBArray(int pixel) {
-        int alpha = (pixel >> 24) & 0xff;
+        //int alpha = (pixel >> 24) & 0xff;
         int red = (pixel >> 16) & 0xff;
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;

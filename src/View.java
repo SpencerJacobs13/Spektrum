@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 
 public class View extends JFrame {
@@ -7,12 +8,19 @@ public class View extends JFrame {
     protected JButton uploadButton;
     protected JLabel imageIcon;
 
+    //the color labels
+    JLabel color1;
+    JLabel color2;
+    JLabel color3;
+    JLabel color4;
+    JLabel color5;
+
     public View(Controller con) {
         super("Welcome");
         this.controller = con;
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(900, 800));
+        setPreferredSize(new Dimension(900, 1000));
 
         setUpUI();
         pack();
@@ -54,9 +62,44 @@ public class View extends JFrame {
         centerPanel.add(analyzeButton);
 
         JPanel colorViewOutput = new JPanel();
-        colorViewOutput.setLayout(new GridLayout(2, 5));
-        contentPanel.add(colorViewOutput, BorderLayout.SOUTH);
+        colorViewOutput.setLayout(new GridLayout(1, 5, 2, 1));
 
+        color1 = new JLabel("", SwingConstants.CENTER);
+        color1.setOpaque(true);
+        color1.setPreferredSize(new Dimension(100, 200));
+        color1.setFont(new Font("default", Font.BOLD, 24));
+        color1.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        colorViewOutput.add(color1);
+
+        color2 = new JLabel("", SwingConstants.CENTER);
+        color2.setOpaque(true);
+        color2.setFont(new Font("default", Font.BOLD, 24));
+        color2.setPreferredSize(new Dimension(100, 200));
+        color2.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        colorViewOutput.add(color2);
+
+        color3 = new JLabel("", SwingConstants.CENTER);
+        color3.setOpaque(true);
+        color3.setPreferredSize(new Dimension(100, 200));
+        color3.setFont(new Font("default", Font.BOLD, 24));
+        color3.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        colorViewOutput.add(color3);
+
+        color4 = new JLabel("", SwingConstants.CENTER);
+        color4.setOpaque(true);
+        color4.setPreferredSize(new Dimension(100, 200));
+        color4.setFont(new Font("default", Font.BOLD, 24));
+        color4.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        colorViewOutput.add(color4);
+
+        color5 = new JLabel("", SwingConstants.CENTER);
+        color5.setOpaque(true);
+        color5.setPreferredSize(new Dimension(100, 200));
+        color5.setFont(new Font("default", Font.BOLD, 24));
+        color5.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        colorViewOutput.add(color5);
+
+        contentPanel.add(colorViewOutput, BorderLayout.SOUTH);
     }
 
 

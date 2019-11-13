@@ -8,11 +8,17 @@ import java.util.stream.Collectors;
 public class Model {
     Controller controller;
     BufferedImage image;
-    protected String colorHex;
     private List colorList;
     protected Map pixelMap;
-    protected List list; //this is the sorted list of pixels
+    protected List list; //this is the sorted list of pixels (by count)
     protected Set colorSet;
+    protected String[] finalFiveColors;
+    protected String colorHex1;
+    protected String colorHex2;
+    protected String colorHex3;
+    protected String colorHex4;
+    protected String colorHex5;
+
 
     public Model(BufferedImage image){
         this.image = image;
@@ -46,7 +52,7 @@ public class Model {
             }
         }//outer
 
-        colorHex = getMostCommonColour(pixelMap);
+        colorHex1 = getMostCommonColour(pixelMap);
         //System.out.println(colorHex);
 
         //once we build the Hash Map, we want to get unique values from that map.
@@ -57,33 +63,12 @@ public class Model {
 
         //this is a list of the Hash Set KEYS, not values.
         colorList = new LinkedList<>(colorSet);
-        System.out.println();
-        System.out.println();
-        System.out.println(colorList.get(colorList.size() - 1));
-        System.out.println();
-        System.out.println();
-
-        //getting the final 3 colors in the list of colors.
-        for(int i = 1; i < 4; i++) {
-            Map.Entry colorEntry = (Map.Entry) colorList.get(colorList.size() - i);
-            int[] rgbThing = getRGBArray((Integer) colorEntry.getKey());
-            System.out.println(Integer.toHexString(rgbThing[0]) + Integer.toHexString(rgbThing[1]) + Integer.toHexString(rgbThing[0]));
-            System.out.println();
-        }
-
-        //int[] rgbThing = getRGBArray(rgb);
-
-        //int[] rgbTest = getRGBArray((Integer) colorList.get(colorList.size() - 1));
-        //Object rgbThing = colorList.get(colorList.size() - 1);
-
-        //String rgb = getRGBArray((Integer) colorList.get(colorList.size() - 1)).toString();
-        //int[] rgbTest2 = getRGBArray(colorSet.size() - 2);
-
-        //String color2 = Integer.toHexString(rgbTest[0]) + Integer.toHexString(rgbTest[1]) + Integer.toHexString(rgbTest[2]);
-        //String color3 = Integer.toHexString(rgbTest2[0]) + Integer.toHexString(rgbTest2[1]) + Integer.toHexString(rgbTest2[2]);
-        //System.out.println("color2: " + color2/* + " color3: " + color3*/);
-
-        //delete the color that has been used already
+//        System.out.println();
+//        System.out.println();
+//        System.out.println(colorList.get(colorList.size() - 1));
+//        System.out.println();
+//        System.out.println();
+        setColorHex();
     }//getImageColors
 
     private String getMostCommonColour(Map map){
@@ -127,6 +112,49 @@ public class Model {
                 return false;
             }
         return true;
+    }
+
+    private void setColorHex(){
+        //color 2
+        Map.Entry colorEntry = (Map.Entry) colorList.get(colorList.size() - 1);
+        int[] rgbThing = getRGBArray((Integer) colorEntry.getKey());
+        String rgbString = Integer.toHexString(rgbThing[0]) + Integer.toHexString(rgbThing[1]) + Integer.toHexString(rgbThing[0]);
+        colorHex2 = setColorHexWithZero(rgbString);
+        System.out.println("color 2: " + colorHex2);
+
+        //color 3
+        colorEntry = (Map.Entry) colorList.get(colorList.size() - 2);
+        rgbThing = getRGBArray((Integer) colorEntry.getKey());
+        rgbString = Integer.toHexString(rgbThing[0]) + Integer.toHexString(rgbThing[1]) + Integer.toHexString(rgbThing[0]);
+        colorHex3 = setColorHexWithZero(rgbString);
+        System.out.println("color 3: " + colorHex3);
+
+        //color 4
+        colorEntry = (Map.Entry) colorList.get(colorList.size() - 3);
+        rgbThing = getRGBArray((Integer) colorEntry.getKey());
+        rgbString = Integer.toHexString(rgbThing[0]) + Integer.toHexString(rgbThing[1]) + Integer.toHexString(rgbThing[0]);
+        colorHex4 = setColorHexWithZero(rgbString);
+        System.out.println("color 4: " + colorHex4);
+
+        //color 5
+        colorEntry = (Map.Entry) colorList.get(colorList.size() - 4);
+        rgbThing = getRGBArray((Integer) colorEntry.getKey());
+        rgbString = Integer.toHexString(rgbThing[0]) + Integer.toHexString(rgbThing[1]) + Integer.toHexString(rgbThing[0]);
+        colorHex5 = setColorHexWithZero(rgbString);
+        System.out.println("color 5: " + colorHex5);
+    }
+
+    private String setColorHexWithZero(String rgbString){
+        String newHexString = "";
+        String zero = "0";
+
+        for(int i = 0; i < rgbString.length(); i++){
+            newHexString += rgbString.charAt(i);
+            if(rgbString.charAt(i) == '0'){
+                newHexString += zero;
+            }
+        }
+        return "#" + newHexString;
     }
 
 }

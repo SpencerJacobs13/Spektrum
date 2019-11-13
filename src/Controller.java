@@ -75,22 +75,38 @@ public class Controller {
     }
 
     private void setViewColors(){
-        String hexString = model.colorHex;
+        //String color1 = setHexString(model.colorHex1);
+        view.color1.setBackground(Color.decode(model.colorHex1));
+        view.color1.setText(model.colorHex1);
+
+        //String color2 = setHexString(model.colorHex2);
+        view.color2.setBackground(Color.decode(model.colorHex2));
+        view.color2.setText(model.colorHex2);
+
+        //String color3 = setHexString(model.colorHex3);
+        view.color3.setBackground(Color.decode(model.colorHex3));
+        view.color3.setText(model.colorHex3);
+
+        //String color4 = setHexString(model.colorHex4);
+        view.color4.setBackground(Color.decode(model.colorHex4));
+        view.color4.setText(model.colorHex4);
+
+        //String color5 = setHexString(model.colorHex5);
+        view.color5.setBackground(Color.decode(model.colorHex5));
+        view.color5.setText(model.colorHex5);
+    }
+
+    private String setHexString(String originalString){
         String newHexString = "";
         String zero = "0";
 
-        for(int i = 0; i < hexString.length(); i++){
-            newHexString += hexString.charAt(i);
-            if(hexString.charAt(i) == '0'){
+        for(int i = 0; i < originalString.length(); i++){
+            newHexString += originalString.charAt(i);
+            if(originalString.charAt(i) == '0'){
                 newHexString += zero;
             }
         }
-        System.out.println("Old HexCode: " + hexString);
-
-        System.out.println("New HexCode: " + newHexString);
-
-        view.color3.setText("#" + hexString);
-        view.color3.setBackground(Color.decode("#" + hexString));
+        return "#" + newHexString;
     }
 
 

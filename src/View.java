@@ -7,6 +7,7 @@ public class View extends JFrame {
     protected JButton analyzeButton;
     protected JButton uploadButton;
     protected JLabel imageIcon;
+    protected JLabel infoLabel;
 
     //the color labels
     JLabel color1;
@@ -35,7 +36,7 @@ public class View extends JFrame {
         contentPanel.setLayout(new BorderLayout(10, 10));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5 ,5, 5));
 
-        JLabel infoLabel = new JLabel("Upload an image. Please." +
+        infoLabel = new JLabel("Upload an image. Please." +
                 " It will be an adventure.");
         infoLabel.setFont(new Font("serif", Font.PLAIN, 24));
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);

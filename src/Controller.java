@@ -66,6 +66,8 @@ public class Controller {
             ImageIcon imageIcon = new ImageIcon(image);
             view.imageIcon.setIcon(imageIcon);
             view.analyzeButton.setVisible(true);
+            //do we want to display the file name or the file path?
+            view.infoLabel.setText("You chose: " + fileChooser.getSelectedFile().getName());
             //start the model outside of the ANON class so it doesnt have to be final
         }else if(returnVal == JFileChooser.ERROR_OPTION) {
             JOptionPane.showMessageDialog(null, "Invalid file type. Cmon.", "Nope", JOptionPane.ERROR_MESSAGE);
@@ -87,8 +89,8 @@ public class Controller {
 
         System.out.println("New HexCode: " + newHexString);
 
-        view.color3.setText("#" + newHexString);
-        view.color3.setBackground(Color.decode("#" + newHexString));
+        view.color3.setText("#" + hexString);
+        view.color3.setBackground(Color.decode("#" + hexString));
     }
 
 

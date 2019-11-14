@@ -21,7 +21,7 @@ public class View extends JFrame {
         this.controller = con;
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(900, 1000));
+        setPreferredSize(new Dimension(900, 1100));
 
         setUpUI();
         pack();

@@ -21,7 +21,7 @@ public class View extends JFrame {
         this.controller = con;
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(900, 1100));
+        setPreferredSize(new Dimension(900, 1000));
 
         setUpUI();
         pack();
@@ -53,6 +53,7 @@ public class View extends JFrame {
         imageIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(imageIcon);
         centerPanel.add(uploadButton);
+        centerPanel.setPreferredSize(new Dimension(400, 400));
 
         //add the center panel to the overall content panel
         contentPanel.add(centerPanel, BorderLayout.CENTER);

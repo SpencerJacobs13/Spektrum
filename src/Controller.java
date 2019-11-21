@@ -76,6 +76,7 @@ public class Controller {
 
     private void setViewColors(){
         String color1 = setHexString(model.colorHex1);
+
         view.color1.setBackground(Color.decode(color1));
         view.color1.setText(color1);
 
@@ -94,6 +95,26 @@ public class Controller {
         String color5 = setHexString(model.colorHex5);
         view.color5.setBackground(Color.decode(color5));
         view.color5.setText(color5);
+
+        view.color1.setBackground(Color.decode(model.colorHex1));
+        view.color1.setText(model.colorHex1);
+//
+//        String color2 = model.colorHex2;
+//        view.color2.setBackground(Color.decode("#" + color2));
+//        view.color2.setText(model.colorHex2);
+//
+//        String color3 = model.colorHex3;
+//        view.color3.setBackground(Color.decode("#" + color3));
+//        view.color3.setText(model.colorHex3);
+//
+//        String color4 = model.colorHex4;
+//        view.color4.setBackground(Color.decode("#" + color4));
+//        view.color4.setText(model.colorHex4);
+//
+//        String color5 = model.colorHex5;
+//        view.color5.setBackground(Color.decode("#" + color5));
+//        view.color5.setText(model.colorHex5);
+
     }
 
     private String setHexString(String originalString){

@@ -55,7 +55,6 @@ public class View extends JFrame {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         uploadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         imageIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
-        //imageIcon.setSize(new Dimension(400, 400));
         centerPanel.add(imageIcon);
         centerPanel.add(uploadButton);
         centerPanel.setPreferredSize(new Dimension(600, 800));
@@ -63,12 +62,12 @@ public class View extends JFrame {
         //add the center panel to the overall content panel
         contentPanel.add(centerPanel, BorderLayout.CENTER);
 
-        analyzeButton = new JButton("Analyze");
+        analyzeButton = new JButton("Most Common Color");
         analyzeButton.setVisible(false);
         analyzeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(analyzeButton);
 
-        livePixelButton = new JButton("Pixel");
+        livePixelButton = new JButton("Individual Pixel");
         livePixelButton.setVisible(false);
         livePixelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(livePixelButton);

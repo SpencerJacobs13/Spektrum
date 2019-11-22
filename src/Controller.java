@@ -13,6 +13,7 @@ public class Controller extends JPanel {
     protected Image image;
     protected BufferedImage bufferedImage = null;
     private Point start = null;
+    private boolean canClickBool = false;
 
     public Controller() {
         this.view = new View(this);
@@ -36,6 +37,7 @@ public class Controller extends JPanel {
                 view.analyzeButton.setVisible(false);
                 view.livePixelButton.setVisible(true);
                 setViewColors();
+                canClickBool = true;
             }
         });
 
@@ -65,7 +67,18 @@ public class Controller extends JPanel {
             }
 
             @Override
-            public void mouseEntered(MouseEvent e) {
+            public void mouseEntered(MouseEvent e){
+                int x = e.getX();
+                int y = e.getY();
+                System.out.println("mouse entered");
+                Cursor cursor1 = view.imageIcon.getCursor();
+                    if(canClickBool){
+                    view.imageIcon.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("images/dropper.png").getImage(), new Point(0, 0), "dropper"));
+
+                    setSize(100, 100);
+                    }else{
+                    setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                }
             }
 
             @Override
@@ -73,6 +86,9 @@ public class Controller extends JPanel {
 
             }
         });
+
+
+
     }//end constructor
 
     //helper function to allow user to upload a new picture
@@ -149,5 +165,7 @@ public class Controller extends JPanel {
 
         return newImage;
     }
+
+    private void setCursorIcon(){}
 
 }//end class

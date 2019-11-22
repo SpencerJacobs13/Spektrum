@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
@@ -5,16 +6,9 @@ import java.util.List;
 public class Model {
     Controller controller;
     protected BufferedImage image;
-    private List colorList;
     protected Map pixelMap;
     protected List list; //this is the sorted list of pixels (by count)
-    protected Set colorSet;
-    protected String[] finalFiveColors;
     protected String colorHex1;
-    protected String colorHex2;
-    protected String colorHex3;
-    protected String colorHex4;
-    protected String colorHex5;
     protected int[][] allPixels;
     int totalSize;
     int mapSize;

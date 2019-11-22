@@ -20,6 +20,8 @@ public class Controller extends JPanel {
         view.uploadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                bufferedImage = null;
+                image = null;
                 uploadImage();
             }
         });
@@ -29,29 +31,28 @@ public class Controller extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 //we need to re-call the other actionPerformed function here because we need a new BufferedImage
                 //before we
+                view.livePixelButton.setVisible(true);
                 model = new Model(bufferedImage);
                 view.analyzeButton.setVisible(false);
                 view.livePixelButton.setVisible(true);
                 setViewColors();
-                //image = model.image;
             }
         });
 
-        addMouseListener(new MouseListener() {
+        view.imageIcon.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 start = e.getPoint();
                 int x = start.x;
                 int y = start.y;
-                System.out.println("In mouseClicked");
 
                 int colorAtClick = model.getRGBatPixel(x, y);
-                System.out.println("color at click: " + colorAtClick);
+                int[] rgbColors = model.getRGBArray(colorAtClick);
+                String rgbStr = Integer.toHexString(rgbColors[0]) + Integer.toHexString(rgbColors[1]) + Integer.toHexString(rgbColors[2]);
 
-                //int[] rgbColors = model.getRGBArray(colorAtClick);
-                //System.out.println(rgbColors[0] + " " + rgbColors[1] + " " + rgbColors[2]);
-                //String rgbStr = Integer.toHexString(rgbColors[0]) + Integer.toHexString(rgbColors[1]) + Integer.toHexString(rgbColors[2]);
-                //System.out.println("Hex of RGB click: " + rgbStr);
+                rgbStr = setHexString(rgbStr);
+                view.color1.setBackground(new Color(rgbColors[0], rgbColors[1], rgbColors[2]));
+                view.color1.setText("R: " + rgbColors[0] + " G: " + rgbColors[1] + " B: " + rgbColors[2]);
             }
 
             @Override
@@ -65,7 +66,6 @@ public class Controller extends JPanel {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                System.out.println("mouse entered");
             }
 
             @Override
@@ -95,16 +95,13 @@ public class Controller extends JPanel {
             }
             //setting image to size of JPanel
             image = bufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+            bufferedImage = resize(bufferedImage, view.imageIcon.getWidth(), view.imageIcon.getHeight());
 
-            //if all is good, update the image view
-            System.out.println("You chose:" + fileChooser.getSelectedFile().getName());
-            ImageIcon imageIcon = new ImageIcon(image);
-            view.imageIcon.setIcon(imageIcon);
+            ImageIcon icon = new ImageIcon(image);
+            view.imageIcon.setIcon(icon);
             view.analyzeButton.setVisible(true);
-            view.livePixelButton.setVisible(true);
             //do we want to display the file name or the file path?
             view.infoLabel.setText("You chose: " + fileChooser.getSelectedFile().getName());
-            //start the model outside of the ANON class so it doesnt have to be final
         }else if(returnVal == JFileChooser.ERROR_OPTION) {
             JOptionPane.showMessageDialog(null, "Invalid file type. Cmon.", "Nope", JOptionPane.ERROR_MESSAGE);
         }
@@ -142,6 +139,15 @@ public class Controller extends JPanel {
             }
         }
         return "#" + newHexString;
+    }
+
+    private BufferedImage resize(BufferedImage image, int w, int h){
+        Image temp = image.getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        BufferedImage newImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics2D = newImage.createGraphics();
+        graphics2D.drawImage(temp, 0, 0, null);
+
+        return newImage;
     }
 
 }//end class

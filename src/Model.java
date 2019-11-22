@@ -1,13 +1,10 @@
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
-import java.util.jar.JarOutputStream;
-import java.util.stream.Collectors;
 
 public class Model {
     Controller controller;
-    BufferedImage image;
+    protected BufferedImage image;
     private List colorList;
     protected Map pixelMap;
     protected List list; //this is the sorted list of pixels (by count)
@@ -18,11 +15,16 @@ public class Model {
     protected String colorHex3;
     protected String colorHex4;
     protected String colorHex5;
+    protected int[][] allPixels;
+    int totalSize;
+    int mapSize;
 
 
     public Model(BufferedImage image){
         this.image = image;
 
+
+        allPixels = new int[image.getWidth()][image.getHeight()];
         getImageColors(image);
     }
 
@@ -30,12 +32,14 @@ public class Model {
     public void getImageColors(BufferedImage image){
         int height = image.getHeight();
         int width = image.getWidth();
+        totalSize = height * width;
 
         //colorListTest = new LinkedList<Pixel>();
-        pixelMap = new HashMap<>();
+        pixelMap = new HashMap<int[], Integer>();
         for(int i = 0; i < width; i ++){
             for(int j = 0; j < height; j++) {
                 int rgb = image.getRGB(i, j);
+                allPixels[i][j] = rgb;
                 int[] rgbArray = getRGBArray(rgb);
 
                 //filter out the grey spectrum (white/black)
@@ -46,20 +50,17 @@ public class Model {
 
                     counter++;
                     pixelMap.put(rgb, counter);
-                    //new Pixel based on the red, green, and blue values of the rgbArray
-                    //colorListTest.add(new Pixel(rgbArray[0], rgbArray[1], rgbArray[2]));
                 }
             }
         }//outer
 
-        colorHex1 = getMostCommonColour(pixelMap);
+        colorHex1 = getMostCommonColor(pixelMap);
         System.out.println(colorHex1);
 
     }//getImageColors
 
-    private String getMostCommonColour(Map map){
+    private String getMostCommonColor(Map map){
         list = new LinkedList(pixelMap.entrySet());
-//      colorList = new LinkedList(list);
 
         Collections.sort(list, new Comparator() {
             public int compare(Object o1, Object o2) {
@@ -68,7 +69,7 @@ public class Model {
             }
         });
 
-        System.out.println("Map size is: " + pixelMap.size());
+        mapSize = pixelMap.entrySet().size();
 
         Map.Entry me = (Map.Entry) list.get(list.size() - 1);
         int[] rgb = getRGBArray((Integer)me.getKey());
@@ -79,13 +80,19 @@ public class Model {
     }
 
     //extracting the RGBArray colors for each pixel. returns an array of ints that represent red, green, and blue
-    private int[] getRGBArray(int pixel) {
+    protected int[] getRGBArray(int pixel) {
         int alpha = (pixel >> 24) & 0xff;
         int red = (pixel >> 16) & 0xff;
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;
 
         return new int[]{red, green, blue};
+    }
+
+    public int getRGBatPixel(int x, int y){
+        int rgb;
+        rgb = image.getRGB(x, y);
+        return rgb;
     }
 
     //we want to ignore grey and black colors - they are not useful for us.

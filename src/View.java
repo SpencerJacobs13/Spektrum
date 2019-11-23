@@ -14,6 +14,7 @@ public class View extends JFrame {
     protected JRadioButton blackWhiteRadioButton;
     protected JRadioButton sepiaRadioButton;
     protected JRadioButton noneRadioButton;
+    protected JPanel radioPanel;
 
     //the color labels
     JLabel color1;
@@ -112,23 +113,25 @@ public class View extends JFrame {
 //        colorViewOutput.add(color5);
 
         //
-//        ButtonGroup buttonGroup= new ButtonGroup();
-//        blackWhiteRadioButton = new JRadioButton("Black/White");
-//        sepiaRadioButton = new JRadioButton("Sepia");
-//        noneRadioButton = new JRadioButton("None");
-//        buttonGroup.add(noneRadioButton);
-//        buttonGroup.add(blackWhiteRadioButton);
-//        buttonGroup.add(sepiaRadioButton);
-//
-//        JPanel radioPanel = new JPanel();
-//        radioPanel.setLayout(new GridLayout(3, 1));
-//        radioPanel.setBorder(BorderFactory.createTitledBorder("Edit Options"));
-//        radioPanel.add(blackWhiteRadioButton);
-//        radioPanel.add(sepiaRadioButton);
-//        radioPanel.add(noneRadioButton);
-//
-//        //add buttons to all canvas.
-//        contentPanel.add(radioPanel, BorderLayout.EAST);
+        ButtonGroup buttonGroup= new ButtonGroup();
+        blackWhiteRadioButton = new JRadioButton("Black/White");
+        sepiaRadioButton = new JRadioButton("Sepia");
+        noneRadioButton = new JRadioButton("None");
+        noneRadioButton.setSelected(true);
+        buttonGroup.add(noneRadioButton);
+        buttonGroup.add(blackWhiteRadioButton);
+        buttonGroup.add(sepiaRadioButton);
+
+        radioPanel = new JPanel();
+        radioPanel.setLayout(new GridLayout(3, 1));
+        radioPanel.setBorder(BorderFactory.createTitledBorder("Edit Options"));
+        radioPanel.add(blackWhiteRadioButton);
+        radioPanel.add(sepiaRadioButton);
+        radioPanel.add(noneRadioButton);
+        radioPanel.setVisible(false);
+
+        //add buttons to all canvas.
+        contentPanel.add(radioPanel, BorderLayout.EAST);
 
 
         contentPanel.add(colorViewOutput, BorderLayout.SOUTH);

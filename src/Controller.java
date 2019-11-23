@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
 
 public class Controller extends JPanel {
     private View view;
@@ -38,6 +39,7 @@ public class Controller extends JPanel {
                 view.livePixelButton.setVisible(true);
                 setViewColors();
                 canClickBool = true;
+                view.radioPanel.setVisible(true);
             }
         });
 
@@ -50,9 +52,8 @@ public class Controller extends JPanel {
 
                 int colorAtClick = model.getRGBatPixel(x, y);
                 int[] rgbColors = model.getRGBArray(colorAtClick);
-                String rgbStr = Integer.toHexString(rgbColors[0]) + Integer.toHexString(rgbColors[1]) + Integer.toHexString(rgbColors[2]);
+                //String rgbStr = Integer.toHexString(rgbColors[0]) + Integer.toHexString(rgbColors[1]) + Integer.toHexString(rgbColors[2]);
 
-                rgbStr = setHexString(rgbStr);
                 view.color1.setBackground(new Color(rgbColors[0], rgbColors[1], rgbColors[2]));
                 view.color1.setText("R: " + rgbColors[0] + " G: " + rgbColors[1] + " B: " + rgbColors[2]);
             }
@@ -73,9 +74,9 @@ public class Controller extends JPanel {
                 System.out.println("mouse entered");
                 Cursor cursor1 = view.imageIcon.getCursor();
                     if(canClickBool){
-                    view.imageIcon.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("images/dropper.png").getImage(), new Point(0, 0), "dropper"));
-
-                    setSize(100, 100);
+                    //view.imageIcon.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("images/dropper.png").getImage(), new Point(0, 0), "dropper"));
+                    view.imageIcon.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+                    //setSize(100, 100);
                     }else{
                     setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 }
@@ -87,7 +88,29 @@ public class Controller extends JPanel {
             }
         });
 
+        view.blackWhiteRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BufferedImage blackWhiteBufferedImage = bufferedImage;
+                blackWhiteBufferedImage = model.makeImageGrayscale(blackWhiteBufferedImage);
 
+                Image blackWhiteImage = blackWhiteBufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+
+                //blackWhiteImage = resize(blackWhiteImage, view.imageIcon.getWidth(), view.imageIcon.getHeight());
+
+                ImageIcon icon = new ImageIcon(blackWhiteImage);
+                view.imageIcon.setBackground(Color.lightGray);
+                view.imageIcon.setIcon(icon);
+            }
+        });
+
+        view.noneRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ImageIcon icon = new ImageIcon(image);
+                view.imageIcon.setIcon(icon);
+            }
+        });
 
     }//end constructor
 
@@ -166,6 +189,5 @@ public class Controller extends JPanel {
         return newImage;
     }
 
-    private void setCursorIcon(){}
 
 }//end class

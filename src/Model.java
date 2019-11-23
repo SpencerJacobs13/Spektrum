@@ -103,8 +103,30 @@ public class Model {
         return true;
     }
 
+    public BufferedImage makeImageGrayscale(BufferedImage originalImage){
+        BufferedImage returnImage = originalImage;
+        int height = originalImage.getHeight();
+        int width = originalImage.getWidth();
 
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                int p = returnImage.getRGB(i, j);
 
+                int a = (p>>24)&0xff;
+                int r = (p>>16)&0xff;
+                int g = (p>>8)&0xff;
+                int b = p&0xff;
+
+                //calculate average
+                int avg = (r+g+b)/3;
+
+                //replace RGB value with avg
+                p = (a<<24) | (avg<<16) | (avg<<8) | avg;
+                returnImage.setRGB(i, j, p);
+            }
+        }
+        return returnImage;
+    }
 
 
 

@@ -6,7 +6,6 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
 
 public class Controller extends JPanel {
     private View view;
@@ -31,8 +30,6 @@ public class Controller extends JPanel {
         view.analyzeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //we need to re-call the other actionPerformed function here because we need a new BufferedImage
-                //before we
                 view.livePixelButton.setVisible(true);
                 model = new Model(bufferedImage);
                 view.analyzeButton.setVisible(false);
@@ -95,7 +92,6 @@ public class Controller extends JPanel {
                 blackWhiteBufferedImage = model.makeImageGrayscale(blackWhiteBufferedImage);
 
                 Image blackWhiteImage = blackWhiteBufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-
                 //blackWhiteImage = resize(blackWhiteImage, view.imageIcon.getWidth(), view.imageIcon.getHeight());
 
                 ImageIcon icon = new ImageIcon(blackWhiteImage);
@@ -109,6 +105,8 @@ public class Controller extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 ImageIcon icon = new ImageIcon(image);
                 view.imageIcon.setIcon(icon);
+                model = new Model(bufferedImage);
+
             }
         });
 
@@ -150,21 +148,6 @@ public class Controller extends JPanel {
         String color1 = setHexString(model.colorHex1);
         view.color1.setBackground(Color.decode(color1));
         view.color1.setText(color1);
-//        String color2 = setHexString(model.colorHex2);
-//        view.color2.setBackground(Color.decode(color2));
-//        view.color2.setText(color2);
-//
-//        String color3 = setHexString(model.colorHex3);
-//        view.color3.setBackground(Color.decode(color3));
-//        view.color3.setText(color3);
-//
-//        String color4 = setHexString(model.colorHex4);
-//        view.color4.setBackground(Color.decode(color4));
-//        view.color4.setText(color4);
-//
-//        String color5 = setHexString(model.colorHex5);
-//        view.color5.setBackground(Color.decode(color5));
-//        view.color5.setText(color5);
     }
 
     private String setHexString(String originalString){

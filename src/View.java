@@ -5,30 +5,30 @@ import javax.swing.border.BevelBorder;
 import java.awt.*;
 
 public class View extends JFrame {
-    Controller controller;
-    protected JButton analyzeButton;
-    protected JButton uploadButton;
-    protected JButton livePixelButton;
-    protected JLabel imageIcon;
-    protected JLabel infoLabel;
-    protected JRadioButton blackWhiteRadioButton;
-    protected JRadioButton sepiaRadioButton;
-    protected JRadioButton noneRadioButton;
-    protected JPanel radioPanel;
+    private Controller controller;
+     JButton analyzeButton;
+     JButton uploadButton;
+     JLabel imageIcon;
+     JLabel infoLabel;
+     JRadioButton blackWhiteRadioButton;
+     JRadioButton negativeRadioButton;
+     JRadioButton noneRadioButton;
+     JPanel radioPanel;
+    JLabel imageNameCurrent;
+    JLabel imagePathCurrent;
+    JLabel imagePixelsCurrent;
+    JLabel imageUniqueColorsCurrent;
+    JLabel mostCommonColorCurrent;
 
-    //the color labels
+    //the color label
     JLabel color1;
-    JLabel color2;
-    JLabel color3;
-    JLabel color4;
-    JLabel color5;
 
     public View(Controller con) {
         super("Welcome");
         this.controller = con;
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(900, 1000));
+        //setPreferredSize(new Dimension(1000, 1100));
 
         setUpUI();
         pack();
@@ -42,13 +42,13 @@ public class View extends JFrame {
         contentPanel.setLayout(new BorderLayout(10, 10));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5 ,5, 5));
 
-        infoLabel = new JLabel("Upload an image. Please." +
-                " It will be an adventure.");
-        infoLabel.setFont(new Font("serif", Font.PLAIN, 24));
-        infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        infoLabel = new JLabel(" ");
         contentPanel.add(infoLabel, BorderLayout.NORTH);
 
-        imageIcon = new JLabel(new ImageIcon("images/blank-image.jpg"));
+        //new ImageIcon("images/blank-image.jpg")
+        ImageIcon blankIcon = new ImageIcon("images/blank-image.jpg");
+
+        imageIcon = new JLabel(blankIcon);
         uploadButton = new JButton(new ImageIcon("images/upload.png"));
 
         //create a new panel for the CENTER of our contentPanel
@@ -58,7 +58,7 @@ public class View extends JFrame {
         imageIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(imageIcon);
         centerPanel.add(uploadButton);
-        centerPanel.setPreferredSize(new Dimension(600, 800));
+        //centerPanel.setPreferredSize(new Dimension(600, 800));
 
         //add the center panel to the overall content panel
         contentPanel.add(centerPanel, BorderLayout.CENTER);
@@ -68,74 +68,99 @@ public class View extends JFrame {
         analyzeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(analyzeButton);
 
-        livePixelButton = new JButton("Individual Pixel");
-        livePixelButton.setVisible(false);
-        livePixelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(livePixelButton);
-
         JPanel colorViewOutput = new JPanel();
         colorViewOutput.setLayout(new GridLayout(1, 5, 2, 1));
+
+        JPanel informationPanel = new JPanel();
+        informationPanel.setLayout(new GridLayout(5, 2));
+        informationPanel.setBorder(BorderFactory.createTitledBorder("Image Information"));
+
+        JLabel imageNameLabel = new JLabel("Name:");
+        imageNameLabel.setFont(new Font("default", Font.BOLD, 18));
+        informationPanel.add(imageNameLabel);
+
+        imageNameCurrent = new JLabel("-");
+        informationPanel.add(imageNameCurrent);
+
+        JLabel imagePathLabel = new JLabel("Path:");
+        imagePathLabel.setFont(new Font("default", Font.BOLD, 18));
+        informationPanel.add(imagePathLabel);
+
+        imagePathCurrent = new JLabel("-");
+        informationPanel.add(imagePathCurrent);
+
+        JLabel imagePixelsLabel = new JLabel("Total Pixels:");
+        imagePixelsLabel.setFont(new Font("default", Font.BOLD, 18));
+        informationPanel.add(imagePixelsLabel);
+
+        imagePixelsCurrent = new JLabel("-");
+        informationPanel.add(imagePixelsCurrent);
+
+        JLabel imageUniqueColorsLabel = new JLabel("Unique Colors: ");
+        imageUniqueColorsLabel.setFont(new Font("default", Font.BOLD, 18));
+        informationPanel.add(imageUniqueColorsLabel);
+
+        imageUniqueColorsCurrent = new JLabel("-");
+        informationPanel.add(imageUniqueColorsCurrent);
+
+        JLabel mostCommonColorLabel = new JLabel("Dominant Color: ");
+        mostCommonColorLabel.setFont(new Font("default", Font.BOLD, 18));
+        informationPanel.add(mostCommonColorLabel);
+
+        mostCommonColorCurrent = new JLabel("-");
+        informationPanel.add(mostCommonColorCurrent);
+
+        contentPanel.add(informationPanel, BorderLayout.WEST);
 
         color1 = new JLabel("", SwingConstants.CENTER);
         color1.setOpaque(true);
         color1.setPreferredSize(new Dimension(100, 200));
         color1.setFont(new Font("default", Font.BOLD, 24));
         color1.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        color1.setBackground(Color.lightGray);
+        color1.setBackground(Color.decode("#DDDDDD"));
+        color1.setText("R: -  G: -  B: -");
         colorViewOutput.add(color1);
 
-//        color2 = new JLabel("", SwingConstants.CENTER);
-//        color2.setOpaque(true);
-//        color2.setFont(new Font("default", Font.BOLD, 24));
-//        color2.setPreferredSize(new Dimension(100, 200));
-//        color2.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-//        colorViewOutput.add(color2);
-//
-//        color3 = new JLabel("", SwingConstants.CENTER);
-//        color3.setOpaque(true);
-//        color3.setPreferredSize(new Dimension(100, 200));
-//        color3.setFont(new Font("default", Font.BOLD, 24));
-//        color3.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-//        colorViewOutput.add(color3);
-//
-//        color4 = new JLabel("", SwingConstants.CENTER);
-//        color4.setOpaque(true);
-//        color4.setPreferredSize(new Dimension(100, 200));
-//        color4.setFont(new Font("default", Font.BOLD, 24));
-//        color4.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-//        colorViewOutput.add(color4);
-//
-//        color5 = new JLabel("", SwingConstants.CENTER);
-//        color5.setOpaque(true);
-//        color5.setPreferredSize(new Dimension(100, 200));
-//        color5.setFont(new Font("default", Font.BOLD, 24));
-//        color5.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-//        colorViewOutput.add(color5);
-
-        //
-        ButtonGroup buttonGroup= new ButtonGroup();
+        ButtonGroup buttonGroup = new ButtonGroup();
         blackWhiteRadioButton = new JRadioButton("Black/White");
-        sepiaRadioButton = new JRadioButton("Sepia");
+        negativeRadioButton = new JRadioButton("Negative");
         noneRadioButton = new JRadioButton("None");
         noneRadioButton.setSelected(true);
         buttonGroup.add(noneRadioButton);
         buttonGroup.add(blackWhiteRadioButton);
-        buttonGroup.add(sepiaRadioButton);
+        buttonGroup.add(negativeRadioButton);
 
         radioPanel = new JPanel();
         radioPanel.setLayout(new GridLayout(3, 1));
         radioPanel.setBorder(BorderFactory.createTitledBorder("Edit Options"));
         radioPanel.add(blackWhiteRadioButton);
-        radioPanel.add(sepiaRadioButton);
+        radioPanel.add(negativeRadioButton);
         radioPanel.add(noneRadioButton);
         radioPanel.setVisible(false);
+        radioPanel.setBorder(BorderFactory.createTitledBorder("Edit Options"));
 
         //add buttons to all canvas.
         contentPanel.add(radioPanel, BorderLayout.EAST);
 
-
         contentPanel.add(colorViewOutput, BorderLayout.SOUTH);
     }
+
+    public ImageIcon getScaledImageIcon(Image srcImg){
+        ImageIcon icon = new ImageIcon(srcImg);
+        int width = -1; // -1 to preserve aspect ratio
+        int height = -1;
+        if (icon.getIconWidth() <= icon.getIconHeight()) {
+            height = imageIcon.getHeight();
+        }
+        else {
+            width = imageIcon.getWidth();
+        }
+        Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(image, icon.getDescription());
+        return icon;
+    }
+
+
 
 
 

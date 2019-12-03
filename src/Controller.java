@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.jws.WebParam;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -14,15 +15,40 @@ public class Controller extends JPanel {
     protected BufferedImage bufferedImage = null;
     private Point start = null;
     private boolean canClickBool = false;
+    protected ImageInfo imageInfo;
+    protected String imageName;
+    protected String imagePath;
+    protected int allPixels;
+    protected int uniqueColors;
+    ImageIcon icon;
 
     public Controller() {
         this.view = new View(this);
-        //anon class to allow th user to upload an image
+        //SQLiteHelper imageHelper = new SQLiteHelper();
+        view.setExtendedState(Frame.MAXIMIZED_BOTH);
+
+        view.addWindowListener(new WindowAdapter() {
+           @Override
+           public void windowClosing(WindowEvent e) {
+               super.windowClosing(e);
+
+               int choice = JOptionPane.showConfirmDialog(Controller.this, "Do you want to save this image for next time?", "Closing", JOptionPane.YES_NO_CANCEL_OPTION,
+                       JOptionPane.WARNING_MESSAGE, null);
+               if (choice == JOptionPane.CANCEL_OPTION) {
+               }else if(choice == JOptionPane.NO_OPTION){
+                   System.exit(0);
+               }else if(choice == JOptionPane.YES_OPTION){
+                   //imageHelper.insertImage();
+               }
+           }
+       });
+
         view.uploadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 bufferedImage = null;
                 image = null;
+                resetPanel();
                 uploadImage();
             }
         });
@@ -30,13 +56,20 @@ public class Controller extends JPanel {
         view.analyzeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.livePixelButton.setVisible(true);
-                model = new Model(bufferedImage);
+
+                //model = new Model(bufferedImage);
                 view.analyzeButton.setVisible(false);
-                view.livePixelButton.setVisible(true);
                 setViewColors();
                 canClickBool = true;
                 view.radioPanel.setVisible(true);
+
+                allPixels = model.totalSize;
+                uniqueColors = model.pixelMap.size();
+
+                view.imagePixelsCurrent.setText(String.valueOf(allPixels));
+                view.imageUniqueColorsCurrent.setText(String.valueOf(uniqueColors));
+
+                imageInfo = new ImageInfo(imageName, imagePath, allPixels, uniqueColors);
             }
         });
 
@@ -49,7 +82,6 @@ public class Controller extends JPanel {
 
                 int colorAtClick = model.getRGBatPixel(x, y);
                 int[] rgbColors = model.getRGBArray(colorAtClick);
-                //String rgbStr = Integer.toHexString(rgbColors[0]) + Integer.toHexString(rgbColors[1]) + Integer.toHexString(rgbColors[2]);
 
                 view.color1.setBackground(new Color(rgbColors[0], rgbColors[1], rgbColors[2]));
                 view.color1.setText("R: " + rgbColors[0] + " G: " + rgbColors[1] + " B: " + rgbColors[2]);
@@ -66,15 +98,9 @@ public class Controller extends JPanel {
 
             @Override
             public void mouseEntered(MouseEvent e){
-                int x = e.getX();
-                int y = e.getY();
-                System.out.println("mouse entered");
-                Cursor cursor1 = view.imageIcon.getCursor();
-                    if(canClickBool){
-                    //view.imageIcon.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("images/dropper.png").getImage(), new Point(0, 0), "dropper"));
+                if(canClickBool){
                     view.imageIcon.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-                    //setSize(100, 100);
-                    }else{
+                }else{
                     setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 }
             }
@@ -92,24 +118,36 @@ public class Controller extends JPanel {
                 blackWhiteBufferedImage = model.makeImageGrayscale(blackWhiteBufferedImage);
 
                 Image blackWhiteImage = blackWhiteBufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-                //blackWhiteImage = resize(blackWhiteImage, view.imageIcon.getWidth(), view.imageIcon.getHeight());
 
-                ImageIcon icon = new ImageIcon(blackWhiteImage);
-                view.imageIcon.setBackground(Color.lightGray);
+                icon = new ImageIcon(blackWhiteImage);
                 view.imageIcon.setIcon(icon);
+                canClickBool = false;
             }
         });
 
         view.noneRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                canClickBool = true;
                 ImageIcon icon = new ImageIcon(image);
                 view.imageIcon.setIcon(icon);
-                model = new Model(bufferedImage);
-
+                //model = new Model(bufferedImage);
             }
         });
 
+        view.negativeRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                BufferedImage negativeBufferedImage = bufferedImage;
+                negativeBufferedImage = model.makeImageNegative(negativeBufferedImage);
+
+                Image negativeImage = negativeBufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+
+                ImageIcon icon = new ImageIcon(negativeImage);
+                view.imageIcon.setIcon(icon);
+                canClickBool = false;
+            }
+        });
     }//end constructor
 
     //helper function to allow user to upload a new picture
@@ -121,56 +159,65 @@ public class Controller extends JPanel {
 
         int returnVal = fileChooser.showOpenDialog(null);
         final File file = fileChooser.getSelectedFile();
+        //imagePath = file.getPath();
 
         //do this stuff if the image is legit
         if(returnVal == JFileChooser.APPROVE_OPTION){
             //trying to resize the image
             try {
-                bufferedImage = ImageIO.read(fileChooser.getSelectedFile());
+                bufferedImage = ImageIO.read(file);
             }catch(IOException m){
                 m.printStackTrace();
             }
             //setting image to size of JPanel
-            image = bufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-            bufferedImage = resize(bufferedImage, view.imageIcon.getWidth(), view.imageIcon.getHeight());
+            image = bufferedImage;
+            image = image.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+            //ImageIcon icon = view.getScaledImageIcon(image);
+            bufferedImage = imageToBufferedImage(image);
 
+            model = new Model(bufferedImage);
             ImageIcon icon = new ImageIcon(image);
+
             view.imageIcon.setIcon(icon);
             view.analyzeButton.setVisible(true);
-            //do we want to display the file name or the file path?
-            view.infoLabel.setText("You chose: " + fileChooser.getSelectedFile().getName());
+
+            //updating info in the west panel
+            view.imageNameCurrent.setText(file.getName());
+            view.imagePathCurrent.setText(file.getPath());
+            imageName = fileChooser.getSelectedFile().getName();
         }else if(returnVal == JFileChooser.ERROR_OPTION) {
             JOptionPane.showMessageDialog(null, "Invalid file type. Cmon.", "Nope", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void setViewColors(){
-        String color1 = setHexString(model.colorHex1);
-        view.color1.setBackground(Color.decode(color1));
-        view.color1.setText(color1);
+        int[] rgb = model.colorHex1;
+        String color = "R: " + rgb[0] + " G: " + rgb[1] + " B: " + rgb[2];
+        view.color1.setBackground(new Color(rgb[0], rgb[1], rgb[2]));
+        view.color1.setText(color);
+        view.mostCommonColorCurrent.setText(color);
     }
 
-    private String setHexString(String originalString){
-        String newHexString = "";
-        String zero = "0";
-
-        for(int i = 0; i < originalString.length(); i++){
-            newHexString += originalString.charAt(i);
-            if(originalString.charAt(i) == '0'){
-                newHexString += zero;
-            }
-        }
-        return "#" + newHexString;
+    private void resetPanel(){
+        view.mostCommonColorCurrent.setText("R: -  G: -  B: -");
+        view.imageUniqueColorsCurrent.setText("-");
+        view.imagePathCurrent.setText("-");
+        view.imageNameCurrent.setText("-");
+        view.imageIcon.setIcon(new ImageIcon("images/blank-image.jpg"));
+        view.color1.setBackground(Color.decode("#DDDDDD"));
+        view.radioPanel.setVisible(false);
+        view.color1.setText("R: -  G: -  B: -");
+        //what else do we need to do to clear the board?
+        //model.image = null;
     }
 
-    private BufferedImage resize(BufferedImage image, int w, int h){
-        Image temp = image.getScaledInstance(w, h, Image.SCALE_SMOOTH);
-        BufferedImage newImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics2D = newImage.createGraphics();
-        graphics2D.drawImage(temp, 0, 0, null);
+    private BufferedImage imageToBufferedImage(Image sourceImage){
+        BufferedImage bufferedImage = new BufferedImage(view.imageIcon.getWidth(), view.imageIcon.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = bufferedImage.createGraphics();
+        g2.drawImage(sourceImage, 0, 0, null);
+        g2.dispose();
 
-        return newImage;
+        return bufferedImage;
     }
-
 
 }//end class

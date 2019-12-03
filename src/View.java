@@ -69,11 +69,8 @@ public class View extends JFrame {
         analyzeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(analyzeButton);
 
-        //JPanel colorViewOutput = new JPanel();
-        //colorViewOutput.setLayout(new GridLayout(1, 5, 2, 1));
-
         JPanel informationPanel = new JPanel();
-        informationPanel.setLayout(new GridLayout(5, 2));
+        informationPanel.setLayout(new GridLayout(10, 1));
         informationPanel.setBorder(BorderFactory.createTitledBorder("Image Information"));
 
         JLabel imageNameLabel = new JLabel("Name:");
@@ -120,7 +117,6 @@ public class View extends JFrame {
         color1.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         color1.setBackground(Color.decode("#DDDDDD"));
         color1.setText("R: -  G: -  B: -");
-        //colorViewOutput.add(color1);
         contentPanel.add(color1, BorderLayout.SOUTH);
 
         buttonGroup = new ButtonGroup();
@@ -143,8 +139,6 @@ public class View extends JFrame {
 
         //add buttons to all canvas.
         contentPanel.add(radioPanel, BorderLayout.EAST);
-
-        //contentPanel.add(colorViewOutput, BorderLayout.SOUTH);
     }
 
     public ImageIcon getScaledImageIcon(Image srcImg){

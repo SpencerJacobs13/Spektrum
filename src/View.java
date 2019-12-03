@@ -14,11 +14,12 @@ public class View extends JFrame {
      JRadioButton negativeRadioButton;
      JRadioButton noneRadioButton;
      JPanel radioPanel;
-    JLabel imageNameCurrent;
-    JLabel imagePathCurrent;
-    JLabel imagePixelsCurrent;
-    JLabel imageUniqueColorsCurrent;
-    JLabel mostCommonColorCurrent;
+     JLabel imageNameCurrent;
+     JLabel imagePathCurrent;
+     JLabel imagePixelsCurrent;
+     JLabel imageUniqueColorsCurrent;
+     JLabel mostCommonColorCurrent;
+    ButtonGroup buttonGroup;
 
     //the color label
     JLabel color1;
@@ -63,13 +64,13 @@ public class View extends JFrame {
         //add the center panel to the overall content panel
         contentPanel.add(centerPanel, BorderLayout.CENTER);
 
-        analyzeButton = new JButton("Most Common Color");
+        analyzeButton = new JButton("Analyze");
         analyzeButton.setVisible(false);
         analyzeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(analyzeButton);
 
-        JPanel colorViewOutput = new JPanel();
-        colorViewOutput.setLayout(new GridLayout(1, 5, 2, 1));
+        //JPanel colorViewOutput = new JPanel();
+        //colorViewOutput.setLayout(new GridLayout(1, 5, 2, 1));
 
         JPanel informationPanel = new JPanel();
         informationPanel.setLayout(new GridLayout(5, 2));
@@ -114,14 +115,15 @@ public class View extends JFrame {
 
         color1 = new JLabel("", SwingConstants.CENTER);
         color1.setOpaque(true);
-        color1.setPreferredSize(new Dimension(100, 200));
+        color1.setPreferredSize(new Dimension(100, 150));
         color1.setFont(new Font("default", Font.BOLD, 24));
         color1.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         color1.setBackground(Color.decode("#DDDDDD"));
         color1.setText("R: -  G: -  B: -");
-        colorViewOutput.add(color1);
+        //colorViewOutput.add(color1);
+        contentPanel.add(color1, BorderLayout.SOUTH);
 
-        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup = new ButtonGroup();
         blackWhiteRadioButton = new JRadioButton("Black/White");
         negativeRadioButton = new JRadioButton("Negative");
         noneRadioButton = new JRadioButton("None");
@@ -142,7 +144,7 @@ public class View extends JFrame {
         //add buttons to all canvas.
         contentPanel.add(radioPanel, BorderLayout.EAST);
 
-        contentPanel.add(colorViewOutput, BorderLayout.SOUTH);
+        //contentPanel.add(colorViewOutput, BorderLayout.SOUTH);
     }
 
     public ImageIcon getScaledImageIcon(Image srcImg){

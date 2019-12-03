@@ -1,5 +1,4 @@
 import javax.imageio.ImageIO;
-import javax.jws.WebParam;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -129,9 +128,9 @@ public class Controller extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canClickBool = true;
+                image = bufferedImage;
                 ImageIcon icon = new ImageIcon(image);
                 view.imageIcon.setIcon(icon);
-                //model = new Model(bufferedImage);
             }
         });
 
@@ -172,7 +171,6 @@ public class Controller extends JPanel {
             //setting image to size of JPanel
             image = bufferedImage;
             image = image.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-            //ImageIcon icon = view.getScaledImageIcon(image);
             bufferedImage = imageToBufferedImage(image);
 
             model = new Model(bufferedImage);
@@ -203,6 +201,7 @@ public class Controller extends JPanel {
         view.imageUniqueColorsCurrent.setText("-");
         view.imagePathCurrent.setText("-");
         view.imageNameCurrent.setText("-");
+        view.imagePixelsCurrent.setText("-");
         view.imageIcon.setIcon(new ImageIcon("images/blank-image.jpg"));
         view.color1.setBackground(Color.decode("#DDDDDD"));
         view.radioPanel.setVisible(false);

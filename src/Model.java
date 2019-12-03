@@ -29,12 +29,10 @@ public class Model {
         System.out.println("Height of model BI: " + image.getHeight());
         System.out.println("Width of model BI: " + image.getWidth());
 
-        //colorListTest = new LinkedList<Pixel>();
         pixelMap = new HashMap<int[], Integer>();
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 int rgb = image.getRGB(i, j);
-                //allPixels[i][j] = rgb;
                 int[] rgbArray = getRGBArray(rgb);
 
                 //filter out the grey spectrum (white/black)

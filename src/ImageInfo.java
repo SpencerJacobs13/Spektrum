@@ -1,25 +1,24 @@
 public class ImageInfo {
-    //int id;
+    int id;
     String name;
     String path;
     int allPixels;
     int uniqueColors;
 
-    public ImageInfo( String name, String path, int allPixels, int uniqueColors) {
-        //this.id = id;
+    public ImageInfo(String name, String path, int allPixels, int uniqueColors) {
         this.name = name;
         this.path = path;
         this.allPixels = allPixels;
         this.uniqueColors = uniqueColors;
     }
 
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

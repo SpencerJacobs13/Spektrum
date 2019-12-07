@@ -4,6 +4,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 
@@ -19,12 +21,40 @@ public class Controller extends JPanel {
     protected String imagePath;
     protected int allPixels;
     protected int uniqueColors;
+    SQLiteHelper imageHelper;
     ImageIcon icon;
 
     public Controller() {
         this.view = new View(this);
-        //SQLiteHelper imageHelper = new SQLiteHelper();
+        imageHelper = new SQLiteHelper();
         view.setExtendedState(Frame.MAXIMIZED_BOTH);
+
+        //we want to load in the image previously saved
+        if(imageHelper.images != null){
+            ImageInfo imageInfo = imageHelper.getLastUsedImage();
+            imageName = imageInfo.getName();
+            imagePath = imageInfo.getPath();
+            allPixels = imageInfo.getAllPixels();
+            uniqueColors = imageInfo.getUniqueColors();
+
+            File file = new File(imagePath);
+            try {
+                bufferedImage = ImageIO.read(file);
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            image = bufferedImage;
+            image = image.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+            bufferedImage = imageToBufferedImage(image);
+
+            view.imageNameCurrent.setText(imageName);
+            view.imagePathCurrent.setText(imagePath);
+            view.imageUniqueColorsCurrent.setText(String.valueOf(uniqueColors));
+            view.imagePixelsCurrent.setText(String.valueOf(allPixels));
+        }
+
+
+
 
         view.addWindowListener(new WindowAdapter() {
            @Override
@@ -35,9 +65,11 @@ public class Controller extends JPanel {
                        JOptionPane.WARNING_MESSAGE, null);
                if (choice == JOptionPane.CANCEL_OPTION) {
                }else if(choice == JOptionPane.NO_OPTION){
+                   imageHelper.closeConnection();
                    System.exit(0);
                }else if(choice == JOptionPane.YES_OPTION){
-                   //imageHelper.insertImage();
+                   ImageInfo imageInfo = new ImageInfo(imageName, imagePath, allPixels, uniqueColors);
+                   imageHelper.insertImage(imageInfo);
                }
            }
        });
@@ -55,7 +87,6 @@ public class Controller extends JPanel {
         view.analyzeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 //model = new Model(bufferedImage);
                 view.analyzeButton.setVisible(false);
                 setViewColors();
@@ -75,15 +106,17 @@ public class Controller extends JPanel {
         view.imageIcon.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                start = e.getPoint();
-                int x = start.x;
-                int y = start.y;
+                if(canClickBool) {
+                    start = e.getPoint();
+                    int x = start.x;
+                    int y = start.y;
 
-                int colorAtClick = model.getRGBatPixel(x, y);
-                int[] rgbColors = model.getRGBArray(colorAtClick);
+                    int colorAtClick = model.getRGBatPixel(x, y);
+                    int[] rgbColors = model.getRGBArray(colorAtClick);
 
-                view.color1.setBackground(new Color(rgbColors[0], rgbColors[1], rgbColors[2]));
-                view.color1.setText("R: " + rgbColors[0] + " G: " + rgbColors[1] + " B: " + rgbColors[2]);
+                    view.color1.setBackground(new Color(rgbColors[0], rgbColors[1], rgbColors[2]));
+                    view.color1.setText("R: " + rgbColors[0] + " G: " + rgbColors[1] + " B: " + rgbColors[2]);
+                }
             }
 
             @Override
@@ -118,7 +151,7 @@ public class Controller extends JPanel {
 
                 Image blackWhiteImage = blackWhiteBufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
 
-                icon = new ImageIcon(blackWhiteImage);
+                ImageIcon icon = new ImageIcon(blackWhiteImage);
                 view.imageIcon.setIcon(icon);
                 canClickBool = false;
             }
@@ -128,7 +161,7 @@ public class Controller extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 canClickBool = true;
-                image = bufferedImage;
+
                 ImageIcon icon = new ImageIcon(image);
                 view.imageIcon.setIcon(icon);
             }
@@ -147,6 +180,7 @@ public class Controller extends JPanel {
                 canClickBool = false;
             }
         });
+
     }//end constructor
 
     //helper function to allow user to upload a new picture
@@ -158,17 +192,14 @@ public class Controller extends JPanel {
 
         int returnVal = fileChooser.showOpenDialog(null);
         final File file = fileChooser.getSelectedFile();
-        //imagePath = file.getPath();
 
         //do this stuff if the image is legit
         if(returnVal == JFileChooser.APPROVE_OPTION){
-            //trying to resize the image
             try {
                 bufferedImage = ImageIO.read(file);
-            }catch(IOException m){
-                m.printStackTrace();
+            }catch(IOException e){
+                e.printStackTrace();
             }
-            //setting image to size of JPanel
             image = bufferedImage;
             image = image.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
             bufferedImage = imageToBufferedImage(image);
@@ -217,6 +248,14 @@ public class Controller extends JPanel {
         g2.dispose();
 
         return bufferedImage;
+    }
+
+
+    private BufferedImage copyBufferedImage(BufferedImage bi) {
+        ColorModel cm = bi.getColorModel();
+        boolean alphaMultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = bi.copyData(null);
+        return new BufferedImage(cm, raster, alphaMultiplied, null);
     }
 
 }//end class

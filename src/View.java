@@ -59,7 +59,6 @@ public class View extends JFrame {
         imageIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(imageIcon);
         centerPanel.add(uploadButton);
-        //centerPanel.setPreferredSize(new Dimension(600, 800));
 
         //add the center panel to the overall content panel
         contentPanel.add(centerPanel, BorderLayout.CENTER);

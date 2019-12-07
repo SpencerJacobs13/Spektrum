@@ -101,52 +101,50 @@ public class Model {
     }
 
     public BufferedImage makeImageGrayscale(BufferedImage originalImage) {
-        BufferedImage returnImage = originalImage;
         int height = originalImage.getHeight();
         int width = originalImage.getWidth();
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                int p = returnImage.getRGB(i, j);
+                int pixel = originalImage.getRGB(i, j);
 
-                int a = (p >> 24) & 0xff;
-                int r = (p >> 16) & 0xff;
-                int g = (p >> 8) & 0xff;
-                int b = p & 0xff;
+                int alpha = (pixel >> 24) & 0xff;
+                int red = (pixel >> 16) & 0xff;
+                int green = (pixel >> 8) & 0xff;
+                int blue = pixel & 0xff;
 
                 //calculate average
-                int avg = (r + g + b) / 3; //the average of every pixel makes it the grayscale equivalent
+                int avg = (red + green + blue) / 3; //the average of every pixel makes it the grayscale equivalent
 
                 //replace RGB value with avg
-                p = (a << 24) | (avg << 16) | (avg << 8) | avg;
-                returnImage.setRGB(i, j, p);
+                pixel = (alpha << 24) | (avg << 16) | (avg << 8) | avg;
+                originalImage.setRGB(i, j, pixel);
             }
         }
-        return returnImage;
+        return originalImage;
     }
 
     public BufferedImage makeImageNegative(BufferedImage originalImage) {
-        BufferedImage returnImage = originalImage;
-
         int height = originalImage.getHeight();
         int width = originalImage.getWidth();
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                int p = returnImage.getRGB(i, j);
-                int a = (p >> 24) & 0xff;
-                int r = (p >> 16) & 0xff;
-                int g = (p >> 8) & 0xff;
-                int b = p & 0xff;
+                int pixel = originalImage.getRGB(i, j);
+
+                int alpha = (pixel >> 24) & 0xff;
+                int red = (pixel >> 16) & 0xff;
+                int green = (pixel >> 8) & 0xff;
+                int blue = pixel & 0xff;
                 //subtract RGB from 255 to get negative of every value
-                r = 255 - r;
-                g = 255 - g;
-                b = 255 - b;
+                red = 255 - red;
+                green = 255 - green;
+                blue = 255 - blue;
                 //set new RGB value
-                p = (a << 24) | (r << 16) | (g << 8) | b;
-                returnImage.setRGB(i, j, p);
+                pixel = (alpha << 24) | (red << 16) | (green << 8) | blue;
+                originalImage.setRGB(i, j, pixel);
             }
         }
-        return returnImage;
+        return originalImage;
     }
 }

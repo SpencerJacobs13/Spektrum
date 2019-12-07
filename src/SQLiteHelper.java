@@ -13,6 +13,7 @@ public class SQLiteHelper {
     static final String ALL_PIXELS = "allPixels";
     static final String UNIQUE_COLORS = "uniqueColors";
     protected Connection connection;
+    protected List<ImageInfo> images;
 
     public SQLiteHelper(){
         getConnection();
@@ -66,7 +67,7 @@ public class SQLiteHelper {
     public ImageInfo getLastUsedImage(){
         String sqlSelect = "SELECT * FROM " + TABLE_IMAGES;
         ImageInfo returnImageInfo;
-        List<ImageInfo> images = new ArrayList<>();
+        images = new ArrayList<>();
         try{
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sqlSelect);

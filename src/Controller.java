@@ -29,32 +29,40 @@ public class Controller extends JPanel {
         imageHelper = new SQLiteHelper();
         view.setExtendedState(Frame.MAXIMIZED_BOTH);
 
-        //we want to load in the image previously saved
-        if(imageHelper.images != null){
+        //we want to load in the image previously saved image, if there is one
+        imageHelper.getAllImages();
+        System.out.println(imageHelper.images);
+        if(!imageHelper.images.isEmpty()){
             ImageInfo imageInfo = imageHelper.getLastUsedImage();
             imageName = imageInfo.getName();
             imagePath = imageInfo.getPath();
             allPixels = imageInfo.getAllPixels();
             uniqueColors = imageInfo.getUniqueColors();
 
-            File file = new File(imagePath);
             try {
+                File file = new File(imagePath);
+                //if the file fails to be read,
                 bufferedImage = ImageIO.read(file);
+                image = bufferedImage;
+                image = image.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                bufferedImage = imageToBufferedImage(image);
+
+                model = new Model(bufferedImage);
+                ImageIcon icon = new ImageIcon(image);
+                view.imageIcon.setIcon(icon);
+                view.analyzeButton.setVisible(true);
+                canClickBool = true;
+
+                //setting the text fields on create of system
+                view.imageNameCurrent.setText(imageName);
+                view.imagePathCurrent.setText(imagePath);
+                view.imageUniqueColorsCurrent.setText(String.valueOf(uniqueColors));
+                view.imagePixelsCurrent.setText(String.valueOf(allPixels));
             }catch(IOException e){
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(Controller.this, "Whoops. file failed to load. Sorry about that.", "Error.", JOptionPane.WARNING_MESSAGE);
             }
-            image = bufferedImage;
-            image = image.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-            bufferedImage = imageToBufferedImage(image);
-
-            view.imageNameCurrent.setText(imageName);
-            view.imagePathCurrent.setText(imagePath);
-            view.imageUniqueColorsCurrent.setText(String.valueOf(uniqueColors));
-            view.imagePixelsCurrent.setText(String.valueOf(allPixels));
         }
-
-
-
 
         view.addWindowListener(new WindowAdapter() {
            @Override
@@ -64,12 +72,17 @@ public class Controller extends JPanel {
                int choice = JOptionPane.showConfirmDialog(Controller.this, "Do you want to save this image for next time?", "Closing", JOptionPane.YES_NO_CANCEL_OPTION,
                        JOptionPane.WARNING_MESSAGE, null);
                if (choice == JOptionPane.CANCEL_OPTION) {
+                   //let the user stay on the interface
                }else if(choice == JOptionPane.NO_OPTION){
+                   imageHelper.deleteAllImages();
+                   System.out.println(imageHelper.images);
                    imageHelper.closeConnection();
                    System.exit(0);
                }else if(choice == JOptionPane.YES_OPTION){
+                   System.out.println("path before we add it to database: " + imagePath);
                    ImageInfo imageInfo = new ImageInfo(imageName, imagePath, allPixels, uniqueColors);
                    imageHelper.insertImage(imageInfo);
+                   imageHelper.closeConnection();
                }
            }
        });
@@ -87,7 +100,6 @@ public class Controller extends JPanel {
         view.analyzeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //model = new Model(bufferedImage);
                 view.analyzeButton.setVisible(false);
                 setViewColors();
                 canClickBool = true;
@@ -99,7 +111,7 @@ public class Controller extends JPanel {
                 view.imagePixelsCurrent.setText(String.valueOf(allPixels));
                 view.imageUniqueColorsCurrent.setText(String.valueOf(uniqueColors));
 
-                imageInfo = new ImageInfo(imageName, imagePath, allPixels, uniqueColors);
+                //imageInfo = new ImageInfo(imageName, imagePath, allPixels, uniqueColors);
             }
         });
 
@@ -214,6 +226,7 @@ public class Controller extends JPanel {
             view.imageNameCurrent.setText(file.getName());
             view.imagePathCurrent.setText(file.getPath());
             imageName = fileChooser.getSelectedFile().getName();
+            imagePath = file.getPath();
         }else if(returnVal == JFileChooser.ERROR_OPTION) {
             JOptionPane.showMessageDialog(null, "Invalid file type. Cmon.", "Nope", JOptionPane.ERROR_MESSAGE);
         }

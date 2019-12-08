@@ -1,4 +1,5 @@
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -13,6 +14,13 @@ public class View extends JFrame {
      JRadioButton blackWhiteRadioButton;
      JRadioButton negativeRadioButton;
      JRadioButton noneRadioButton;
+     JRadioButton thresholdButton;
+     JRadioButton quantizeButton;
+     JRadioButton pixelateButton;
+     JRadioButton edgeDetectionButton;
+     JRadioButton sobelButton;
+     JRadioButton ditherButton;
+
      JPanel radioPanel;
      JLabel imageNameCurrent;
      JLabel imagePathCurrent;
@@ -122,16 +130,38 @@ public class View extends JFrame {
         blackWhiteRadioButton = new JRadioButton("Black/White");
         negativeRadioButton = new JRadioButton("Negative");
         noneRadioButton = new JRadioButton("None");
+        thresholdButton = new JRadioButton("Threshold");
+        quantizeButton = new JRadioButton("Quantize");
+        pixelateButton = new JRadioButton("Pixelate");
+        edgeDetectionButton = new JRadioButton("Edge Detect");
+        sobelButton = new JRadioButton("Sobel's Edge");
+        ditherButton = new JRadioButton("Dither");
+
         noneRadioButton.setSelected(true);
         buttonGroup.add(noneRadioButton);
         buttonGroup.add(blackWhiteRadioButton);
         buttonGroup.add(negativeRadioButton);
+        buttonGroup.add(thresholdButton);
+        buttonGroup.add(quantizeButton);
+        buttonGroup.add(pixelateButton);
+        buttonGroup.add(edgeDetectionButton);
+        buttonGroup.add(sobelButton);
+        buttonGroup.add(ditherButton);
+
 
         radioPanel = new JPanel();
-        radioPanel.setLayout(new GridLayout(3, 1));
+        radioPanel.setLayout(new GridLayout(9, 2));
         radioPanel.setBorder(BorderFactory.createTitledBorder("Edit Options"));
         radioPanel.add(blackWhiteRadioButton);
         radioPanel.add(negativeRadioButton);
+        radioPanel.add(thresholdButton);
+        radioPanel.add(quantizeButton);
+        radioPanel.add(pixelateButton);
+        radioPanel.add(edgeDetectionButton);
+        radioPanel.add(sobelButton);
+        radioPanel.add(ditherButton);
+
+
         radioPanel.add(noneRadioButton);
         radioPanel.setVisible(false);
         radioPanel.setBorder(BorderFactory.createTitledBorder("Edit Options"));

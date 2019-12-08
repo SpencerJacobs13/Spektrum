@@ -16,13 +16,12 @@ public class Controller extends JPanel {
     protected BufferedImage bufferedImage = null;
     private Point start = null;
     private boolean canClickBool = false;
-    protected ImageInfo imageInfo;
     protected String imageName;
     protected String imagePath;
     protected int allPixels;
     protected int uniqueColors;
-    SQLiteHelper imageHelper;
-    ImageIcon icon;
+    private SQLiteHelper imageHelper;
+    protected Image testImage;
 
     public Controller() {
         this.view = new View(this);
@@ -47,7 +46,7 @@ public class Controller extends JPanel {
                 image = image.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
                 bufferedImage = imageToBufferedImage(image);
 
-                model = new Model(bufferedImage);
+                model = new Model(this, bufferedImage);
                 ImageIcon icon = new ImageIcon(image);
                 view.imageIcon.setIcon(icon);
                 view.analyzeButton.setVisible(true);
@@ -68,7 +67,6 @@ public class Controller extends JPanel {
            @Override
            public void windowClosing(WindowEvent e) {
                super.windowClosing(e);
-
                int choice = JOptionPane.showConfirmDialog(Controller.this, "Do you want to save this image for next time?", "Closing", JOptionPane.YES_NO_CANCEL_OPTION,
                        JOptionPane.WARNING_MESSAGE, null);
                if (choice == JOptionPane.CANCEL_OPTION) {
@@ -158,12 +156,19 @@ public class Controller extends JPanel {
         view.blackWhiteRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BufferedImage blackWhiteBufferedImage = bufferedImage;
-                blackWhiteBufferedImage = model.makeImageGrayscale(blackWhiteBufferedImage);
+                Image grayscaleImage = bufferedImage;
+                grayscaleImage = grayscaleImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                grayscaleImage = model.makeImageGrayscale(grayscaleImage);
+                //testImage = bufferedImage;
+                //testImage = testImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                //model = new Model(Controller.this, bufferedImage);
 
-                Image blackWhiteImage = blackWhiteBufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                //BufferedImage blackWhiteBufferedImage = bufferedImage;
+                //blackWhiteBufferedImage = model.makeImageGrayscale(blackWhiteBufferedImage);
 
-                ImageIcon icon = new ImageIcon(blackWhiteImage);
+                //Image blackWhiteImage = blackWhiteBufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+
+                ImageIcon icon = new ImageIcon(grayscaleImage);
                 view.imageIcon.setIcon(icon);
                 canClickBool = false;
             }
@@ -182,16 +187,96 @@ public class Controller extends JPanel {
         view.negativeRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                BufferedImage negativeBufferedImage = bufferedImage;
-                negativeBufferedImage = model.makeImageNegative(negativeBufferedImage);
-
-                Image negativeImage = negativeBufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                Image negativeImage = bufferedImage;
+                negativeImage = negativeImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                negativeImage = model.makeImageNegative(negativeImage);
 
                 ImageIcon icon = new ImageIcon(negativeImage);
                 view.imageIcon.setIcon(icon);
                 canClickBool = false;
             }
         });
+
+        view.thresholdButton.addActionListener(new ActionListener() {
+            //we can add a value to this one 1-255
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Image thresholdImage = bufferedImage;
+                thresholdImage = thresholdImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                thresholdImage = model.makeImageThreshold(thresholdImage);
+
+                ImageIcon icon = new ImageIcon(thresholdImage);
+                view.imageIcon.setIcon(icon);
+                canClickBool = false;
+            }
+        });
+
+        view.quantizeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Image quantizeImage = bufferedImage;
+                quantizeImage = quantizeImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                quantizeImage = model.makeImageQuantize(quantizeImage);
+
+                ImageIcon icon = new ImageIcon(quantizeImage);
+                view.imageIcon.setIcon(icon);
+                canClickBool = false;
+            }
+        });
+
+        view.pixelateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Image pixelateImage = bufferedImage;
+                pixelateImage = pixelateImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                pixelateImage = model.makeImagePixelate(pixelateImage);
+
+                ImageIcon icon = new ImageIcon(pixelateImage);
+                view.imageIcon.setIcon(icon);
+                canClickBool = false;
+            }
+        });
+
+        view.edgeDetectionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Image edgeDetectImage = bufferedImage;
+                edgeDetectImage = edgeDetectImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                edgeDetectImage = model.makeImageEdgeDetect(edgeDetectImage);
+
+                ImageIcon icon = new ImageIcon(edgeDetectImage);
+                view.imageIcon.setIcon(icon);
+                canClickBool = false;
+            }
+        });
+
+        view.sobelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Image edgeDetectImage = bufferedImage;
+                edgeDetectImage = edgeDetectImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                edgeDetectImage = model.makeImageSobel(edgeDetectImage);
+
+                ImageIcon icon = new ImageIcon(edgeDetectImage);
+                view.imageIcon.setIcon(icon);
+                canClickBool = false;
+            }
+        });
+
+        view.ditherButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Image ditherImage = bufferedImage;
+                ditherImage = ditherImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+                ditherImage = model.makeImageDither(ditherImage);
+
+                ImageIcon icon = new ImageIcon(ditherImage);
+                view.imageIcon.setIcon(icon);
+                canClickBool = false;
+            }
+        });
+
+
 
     }//end constructor
 
@@ -215,10 +300,11 @@ public class Controller extends JPanel {
             image = bufferedImage;
             image = image.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
             bufferedImage = imageToBufferedImage(image);
+            //testImage = bufferedImage;
+            //testImage = testImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+            model = new Model(this, bufferedImage);
 
-            model = new Model(bufferedImage);
             ImageIcon icon = new ImageIcon(image);
-
             view.imageIcon.setIcon(icon);
             view.analyzeButton.setVisible(true);
 
@@ -262,7 +348,6 @@ public class Controller extends JPanel {
 
         return bufferedImage;
     }
-
 
     private BufferedImage copyBufferedImage(BufferedImage bi) {
         ColorModel cm = bi.getColorModel();

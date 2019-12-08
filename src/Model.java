@@ -1,24 +1,31 @@
+import milchreis.imageprocessing.*;
+import processing.core.PImage;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.util.*;
 import java.util.List;
 
 public class Model {
     Controller controller;
-    protected BufferedImage image;
+    protected BufferedImage bufferedImage;
     protected Map pixelMap;
     protected List list; //this is the sorted list of pixels (by count)
     protected int[] colorHex1;
+    protected Image image;
     int totalSize;
     int mapSize;
+    protected int value; //the slider on the main screen changes this value
 
 
-    public Model(BufferedImage image) {
-        this.image = image;
+    public Model(Controller con, BufferedImage buffImage) {
+        this.bufferedImage = buffImage;
+        this.controller = con;
+        this.image = controller.testImage;
 
-        //allPixels = new int[image.getWidth()][image.getHeight()];
-        getImageColors(image);
+        getImageColors(buffImage);
     }
 
     //extracting the colors of each pixel into a 2D array.
@@ -26,9 +33,6 @@ public class Model {
         int height = image.getHeight();
         int width = image.getWidth();
         totalSize = height * width;
-        System.out.println("Height of model BI: " + image.getHeight());
-        System.out.println("Width of model BI: " + image.getWidth());
-
         pixelMap = new HashMap<int[], Integer>();
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -48,8 +52,6 @@ public class Model {
         }//outer
 
         colorHex1 = getMostCommonColor(pixelMap);
-        System.out.println("Unique colors: " + pixelMap.entrySet().size());
-
     }//getImageColors
 
     private int[] getMostCommonColor(Map map) {
@@ -82,7 +84,7 @@ public class Model {
 
     public int getRGBatPixel(int x, int y) {
         int rgb;
-        rgb = image.getRGB(x, y);
+        rgb = bufferedImage.getRGB(x, y);
         return rgb;
     }
 
@@ -100,51 +102,67 @@ public class Model {
         return true;
     }
 
-    public BufferedImage makeImageGrayscale(BufferedImage originalImage) {
-        int height = originalImage.getHeight();
-        int width = originalImage.getWidth();
+    public Image makeImageGrayscale(Image originalImage) {
+        PImage pImage = new PImage(originalImage);
+        PImage processed = Grayscale.apply(pImage);
+        originalImage = processed.getImage();
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int pixel = originalImage.getRGB(i, j);
-
-                int alpha = (pixel >> 24) & 0xff;
-                int red = (pixel >> 16) & 0xff;
-                int green = (pixel >> 8) & 0xff;
-                int blue = pixel & 0xff;
-
-                //calculate average
-                int avg = (red + green + blue) / 3; //the average of every pixel makes it the grayscale equivalent
-
-                //replace RGB value with avg
-                pixel = (alpha << 24) | (avg << 16) | (avg << 8) | avg;
-                originalImage.setRGB(i, j, pixel);
-            }
-        }
         return originalImage;
     }
 
-    public BufferedImage makeImageNegative(BufferedImage originalImage) {
-        int height = originalImage.getHeight();
-        int width = originalImage.getWidth();
+    public Image makeImageNegative(Image originalImage) {
+        PImage pImage = new PImage(originalImage);
+        PImage processed = InvertColors.apply(pImage, true, true, true);
+        originalImage = processed.getImage();
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int pixel = originalImage.getRGB(i, j);
+        return originalImage;
+    }
 
-                int alpha = (pixel >> 24) & 0xff;
-                int red = (pixel >> 16) & 0xff;
-                int green = (pixel >> 8) & 0xff;
-                int blue = pixel & 0xff;
-                //subtract RGB from 255 to get negative of every value
-                red = 255 - red;
-                green = 255 - green;
-                blue = 255 - blue;
-                //set new RGB value
-                pixel = (alpha << 24) | (red << 16) | (green << 8) | blue;
-                originalImage.setRGB(i, j, pixel);
-            }
-        }
+    public Image makeImageThreshold(Image originalImage){
+        PImage pImage = new PImage(originalImage);
+        PImage processed = Threshold.apply(pImage);
+        originalImage = processed.getImage();
+
+        return originalImage;
+    }
+
+    public Image makeImageQuantize(Image originalImage){
+        PImage pImage = new PImage(originalImage);
+        PImage processed = Quantization.apply(pImage, 3);
+        originalImage = processed.getImage();
+
+        return originalImage;
+    }
+
+    public Image makeImagePixelate(Image originalImage){
+        PImage pImage = new PImage(originalImage);
+        PImage processed = Pixelation.apply(pImage, 10);
+        originalImage = processed.getImage();
+
+        return originalImage;
+    }
+
+    public Image makeImageEdgeDetect(Image originalImage){
+        PImage pImage = new PImage(originalImage);
+        PImage processed = CannyEdgeDetector.apply(pImage);
+        originalImage = processed.getImage();
+
+        return originalImage;
+    }
+
+    public Image makeImageSobel(Image originalImage){
+        PImage pImage = new PImage(originalImage);
+        PImage processed = SobelEdgeDetector.apply(pImage);
+        originalImage = processed.getImage();
+
+        return originalImage;
+    }
+
+    public Image makeImageDither(Image originalImage){
+        PImage pImage = new PImage(originalImage);
+        PImage processed = Dithering.apply(pImage);
+        originalImage = processed.getImage();
+
         return originalImage;
     }
 }

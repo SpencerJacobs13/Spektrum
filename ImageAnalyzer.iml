@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="sqlite-jdbc-3.27.2.1" level="project" />
+    <orderEntry type="library" name="ImageProcessing" level="project" />
+    <orderEntry type="library" name="core" level="project" />
   </component>
 </module>

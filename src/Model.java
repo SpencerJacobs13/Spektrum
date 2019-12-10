@@ -9,12 +9,10 @@ import java.util.*;
 import java.util.List;
 
 public class Model {
-    Controller controller;
-    protected BufferedImage bufferedImage;
+    private Controller controller;
+    private BufferedImage bufferedImage;
     protected Map pixelMap;
-    protected List list; //this is the sorted list of pixels (by count)
     protected int[] colorHex1;
-    protected Image image;
     int totalSize;
     int mapSize;
     protected int value; //the slider on the main screen changes this value
@@ -23,7 +21,6 @@ public class Model {
     public Model(Controller con, BufferedImage buffImage) {
         this.bufferedImage = buffImage;
         this.controller = con;
-        this.image = controller.testImage;
 
         getImageColors(buffImage);
     }
@@ -55,7 +52,7 @@ public class Model {
     }//getImageColors
 
     private int[] getMostCommonColor(Map map) {
-        list = new LinkedList(pixelMap.entrySet());
+        List list = new LinkedList(pixelMap.entrySet());
 
         Collections.sort(list, new Comparator() {
             public int compare(Object o1, Object o2) {

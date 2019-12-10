@@ -21,7 +21,7 @@ public class Controller extends JPanel implements ActionListener {
     private int allPixels;
     private int uniqueColors;
     private SQLiteHelper imageHelper;
-    protected Image testImage;
+    //protected Image testImage;
 
     public Controller() {
         this.view = new View(this);

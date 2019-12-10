@@ -128,14 +128,40 @@ public class View extends JFrame {
 
         buttonGroup = new ButtonGroup();
         blackWhiteRadioButton = new JRadioButton("Black/White");
+        blackWhiteRadioButton.setActionCommand("blackWhite");
+        blackWhiteRadioButton.addActionListener(controller);
+
         negativeRadioButton = new JRadioButton("Negative");
+        negativeRadioButton.addActionListener(controller);
+        negativeRadioButton.setActionCommand("negative");
+
         noneRadioButton = new JRadioButton("None");
+        noneRadioButton.addActionListener(controller);
+        noneRadioButton.setActionCommand("none");
+
         thresholdButton = new JRadioButton("Threshold");
+        thresholdButton.addActionListener(controller);
+        thresholdButton.setActionCommand("threshold");
+
         quantizeButton = new JRadioButton("Quantize");
+        quantizeButton.addActionListener(controller);
+        quantizeButton.setActionCommand("quantize");
+
         pixelateButton = new JRadioButton("Pixelate");
+        pixelateButton.addActionListener(controller);
+        pixelateButton.setActionCommand("pixelate");
+
         edgeDetectionButton = new JRadioButton("Edge Detect");
+        edgeDetectionButton.addActionListener(controller);
+        edgeDetectionButton.setActionCommand("edgeDetect");
+
         sobelButton = new JRadioButton("Sobel's Edge");
+        sobelButton.addActionListener(controller);
+        sobelButton.setActionCommand("sobel");
+
         ditherButton = new JRadioButton("Dither");
+        ditherButton.addActionListener(controller);
+        ditherButton.setActionCommand("dither");
 
         noneRadioButton.setSelected(true);
         buttonGroup.add(noneRadioButton);

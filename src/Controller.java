@@ -9,17 +9,17 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 
-public class Controller extends JPanel {
+public class Controller extends JPanel implements ActionListener {
     private View view;
     private Model model;
-    protected Image image;
-    protected BufferedImage bufferedImage = null;
+    private Image image;
+    private BufferedImage bufferedImage = null;
     private Point start = null;
     private boolean canClickBool = false;
-    protected String imageName;
-    protected String imagePath;
-    protected int allPixels;
-    protected int uniqueColors;
+    private String imageName;
+    private String imagePath;
+    private int allPixels;
+    private int uniqueColors;
     private SQLiteHelper imageHelper;
     protected Image testImage;
 
@@ -153,27 +153,6 @@ public class Controller extends JPanel {
             }
         });
 
-        view.blackWhiteRadioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Image grayscaleImage = bufferedImage;
-                grayscaleImage = grayscaleImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-                grayscaleImage = model.makeImageGrayscale(grayscaleImage);
-                //testImage = bufferedImage;
-                //testImage = testImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-                //model = new Model(Controller.this, bufferedImage);
-
-                //BufferedImage blackWhiteBufferedImage = bufferedImage;
-                //blackWhiteBufferedImage = model.makeImageGrayscale(blackWhiteBufferedImage);
-
-                //Image blackWhiteImage = blackWhiteBufferedImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-
-                ImageIcon icon = new ImageIcon(grayscaleImage);
-                view.imageIcon.setIcon(icon);
-                canClickBool = false;
-            }
-        });
-
         view.noneRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -183,102 +162,35 @@ public class Controller extends JPanel {
                 view.imageIcon.setIcon(icon);
             }
         });
-
-        view.negativeRadioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Image negativeImage = bufferedImage;
-                negativeImage = negativeImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-                negativeImage = model.makeImageNegative(negativeImage);
-
-                ImageIcon icon = new ImageIcon(negativeImage);
-                view.imageIcon.setIcon(icon);
-                canClickBool = false;
-            }
-        });
-
-        view.thresholdButton.addActionListener(new ActionListener() {
-            //we can add a value to this one 1-255
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Image thresholdImage = bufferedImage;
-                thresholdImage = thresholdImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-                thresholdImage = model.makeImageThreshold(thresholdImage);
-
-                ImageIcon icon = new ImageIcon(thresholdImage);
-                view.imageIcon.setIcon(icon);
-                canClickBool = false;
-            }
-        });
-
-        view.quantizeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Image quantizeImage = bufferedImage;
-                quantizeImage = quantizeImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-                quantizeImage = model.makeImageQuantize(quantizeImage);
-
-                ImageIcon icon = new ImageIcon(quantizeImage);
-                view.imageIcon.setIcon(icon);
-                canClickBool = false;
-            }
-        });
-
-        view.pixelateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Image pixelateImage = bufferedImage;
-                pixelateImage = pixelateImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-                pixelateImage = model.makeImagePixelate(pixelateImage);
-
-                ImageIcon icon = new ImageIcon(pixelateImage);
-                view.imageIcon.setIcon(icon);
-                canClickBool = false;
-            }
-        });
-
-        view.edgeDetectionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Image edgeDetectImage = bufferedImage;
-                edgeDetectImage = edgeDetectImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-                edgeDetectImage = model.makeImageEdgeDetect(edgeDetectImage);
-
-                ImageIcon icon = new ImageIcon(edgeDetectImage);
-                view.imageIcon.setIcon(icon);
-                canClickBool = false;
-            }
-        });
-
-        view.sobelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Image edgeDetectImage = bufferedImage;
-                edgeDetectImage = edgeDetectImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-                edgeDetectImage = model.makeImageSobel(edgeDetectImage);
-
-                ImageIcon icon = new ImageIcon(edgeDetectImage);
-                view.imageIcon.setIcon(icon);
-                canClickBool = false;
-            }
-        });
-
-        view.ditherButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Image ditherImage = bufferedImage;
-                ditherImage = ditherImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
-                ditherImage = model.makeImageDither(ditherImage);
-
-                ImageIcon icon = new ImageIcon(ditherImage);
-                view.imageIcon.setIcon(icon);
-                canClickBool = false;
-            }
-        });
-
-
-
     }//end constructor
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Image editImage = bufferedImage;
+        editImage = editImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
+
+        String actionCommand = e.getActionCommand();
+        if(actionCommand.equals("blackWhite"))
+            editImage = model.makeImageGrayscale(editImage);
+        else if(actionCommand.equals("negative"))
+            editImage = model.makeImageNegative(editImage);
+        else if(actionCommand.equals("threshold"))
+            editImage = model.makeImageThreshold(editImage);
+        else if(actionCommand.equals("quantize"))
+            editImage = model.makeImageQuantize(editImage);
+        else if(actionCommand.equals("pixelate"))
+            editImage = model.makeImagePixelate(editImage);
+        else if(actionCommand.equals("edgeDetect"))
+            editImage = model.makeImageEdgeDetect(editImage);
+        else if(actionCommand.equals("sobel"))
+            editImage = model.makeImageSobel(editImage);
+        else if(actionCommand.equals("dither"))
+            editImage = model.makeImageDither(editImage);
+
+        ImageIcon icon = new ImageIcon(editImage);
+        view.imageIcon.setIcon(icon);
+        canClickBool = false;
+    }
 
     //helper function to allow user to upload a new picture
     private void uploadImage(){
@@ -347,13 +259,6 @@ public class Controller extends JPanel {
         g2.dispose();
 
         return bufferedImage;
-    }
-
-    private BufferedImage copyBufferedImage(BufferedImage bi) {
-        ColorModel cm = bi.getColorModel();
-        boolean alphaMultiplied = cm.isAlphaPremultiplied();
-        WritableRaster raster = bi.copyData(null);
-        return new BufferedImage(cm, raster, alphaMultiplied, null);
     }
 
 }//end class

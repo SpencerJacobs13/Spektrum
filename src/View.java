@@ -7,27 +7,17 @@ import java.awt.*;
 
 public class View extends JFrame {
     private Controller controller;
-     JButton analyzeButton;
-     JButton uploadButton;
-     JLabel imageIcon;
-     JLabel infoLabel;
-     JRadioButton blackWhiteRadioButton;
-     JRadioButton negativeRadioButton;
+     protected JButton analyzeButton;
+     protected JButton uploadButton;
+     protected JLabel imageIcon;
      JRadioButton noneRadioButton;
-     JRadioButton thresholdButton;
-     JRadioButton quantizeButton;
-     JRadioButton pixelateButton;
-     JRadioButton edgeDetectionButton;
-     JRadioButton sobelButton;
-     JRadioButton ditherButton;
 
-     JPanel radioPanel;
-     JLabel imageNameCurrent;
-     JLabel imagePathCurrent;
-     JLabel imagePixelsCurrent;
-     JLabel imageUniqueColorsCurrent;
-     JLabel mostCommonColorCurrent;
-    ButtonGroup buttonGroup;
+     protected JPanel radioPanel;
+     protected JLabel imageNameCurrent;
+     protected JLabel imagePathCurrent;
+     protected JLabel imagePixelsCurrent;
+     protected JLabel imageUniqueColorsCurrent;
+     protected JLabel mostCommonColorCurrent;
 
     //the color label
     JLabel color1;
@@ -51,7 +41,7 @@ public class View extends JFrame {
         contentPanel.setLayout(new BorderLayout(10, 10));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 5 ,5, 5));
 
-        infoLabel = new JLabel(" ");
+        JLabel infoLabel = new JLabel(" ");
         contentPanel.add(infoLabel, BorderLayout.NORTH);
 
         //new ImageIcon("images/blank-image.jpg")
@@ -126,44 +116,42 @@ public class View extends JFrame {
         color1.setText("R: -  G: -  B: -");
         contentPanel.add(color1, BorderLayout.SOUTH);
 
-        buttonGroup = new ButtonGroup();
-        blackWhiteRadioButton = new JRadioButton("Black/White");
+        noneRadioButton = new JRadioButton("None");
+
+        JRadioButton blackWhiteRadioButton = new JRadioButton("Black/White");
         blackWhiteRadioButton.setActionCommand("blackWhite");
         blackWhiteRadioButton.addActionListener(controller);
 
-        negativeRadioButton = new JRadioButton("Negative");
+        JRadioButton negativeRadioButton = new JRadioButton("Negative");
         negativeRadioButton.addActionListener(controller);
         negativeRadioButton.setActionCommand("negative");
 
-        noneRadioButton = new JRadioButton("None");
-        noneRadioButton.addActionListener(controller);
-        noneRadioButton.setActionCommand("none");
-
-        thresholdButton = new JRadioButton("Threshold");
+        JRadioButton thresholdButton = new JRadioButton("Threshold");
         thresholdButton.addActionListener(controller);
         thresholdButton.setActionCommand("threshold");
 
-        quantizeButton = new JRadioButton("Quantize");
+        JRadioButton quantizeButton = new JRadioButton("Quantize");
         quantizeButton.addActionListener(controller);
         quantizeButton.setActionCommand("quantize");
 
-        pixelateButton = new JRadioButton("Pixelate");
+        JRadioButton pixelateButton = new JRadioButton("Pixelate");
         pixelateButton.addActionListener(controller);
         pixelateButton.setActionCommand("pixelate");
 
-        edgeDetectionButton = new JRadioButton("Edge Detect");
+        JRadioButton edgeDetectionButton = new JRadioButton("Edge Detect");
         edgeDetectionButton.addActionListener(controller);
         edgeDetectionButton.setActionCommand("edgeDetect");
 
-        sobelButton = new JRadioButton("Sobel's Edge");
+        JRadioButton sobelButton = new JRadioButton("Sobel's Edge");
         sobelButton.addActionListener(controller);
         sobelButton.setActionCommand("sobel");
 
-        ditherButton = new JRadioButton("Dither");
+        JRadioButton ditherButton = new JRadioButton("Dither");
         ditherButton.addActionListener(controller);
         ditherButton.setActionCommand("dither");
 
         noneRadioButton.setSelected(true);
+        ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(noneRadioButton);
         buttonGroup.add(blackWhiteRadioButton);
         buttonGroup.add(negativeRadioButton);
@@ -186,8 +174,6 @@ public class View extends JFrame {
         radioPanel.add(edgeDetectionButton);
         radioPanel.add(sobelButton);
         radioPanel.add(ditherButton);
-
-
         radioPanel.add(noneRadioButton);
         radioPanel.setVisible(false);
         radioPanel.setBorder(BorderFactory.createTitledBorder("Edit Options"));

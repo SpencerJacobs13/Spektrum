@@ -14,9 +14,6 @@ public class Model {
     protected Map pixelMap;
     protected int[] colorHex1;
     int totalSize;
-    int mapSize;
-    protected int value; //the slider on the main screen changes this value
-
 
     public Model(Controller con, BufferedImage buffImage) {
         this.bufferedImage = buffImage;
@@ -26,7 +23,7 @@ public class Model {
     }
 
     //extracting the colors of each pixel into a 2D array.
-    public void getImageColors(BufferedImage image) {
+    private void getImageColors(BufferedImage image) {
         int height = image.getHeight();
         int width = image.getWidth();
         totalSize = height * width;
@@ -48,10 +45,10 @@ public class Model {
             }
         }//outer
 
-        colorHex1 = getMostCommonColor(pixelMap);
+        colorHex1 = getMostCommonColor();
     }//getImageColors
 
-    private int[] getMostCommonColor(Map map) {
+    private int[] getMostCommonColor() {
         List list = new LinkedList(pixelMap.entrySet());
 
         Collections.sort(list, new Comparator() {
@@ -60,8 +57,6 @@ public class Model {
                         .compareTo(((Map.Entry) (o2)).getValue());
             }
         });
-
-        mapSize = pixelMap.entrySet().size();
 
         Map.Entry me = (Map.Entry) list.get(list.size() - 1);
         int[] rgb = getRGBArray((Integer) me.getKey());
@@ -80,26 +75,24 @@ public class Model {
     }
 
     public int getRGBatPixel(int x, int y) {
-        int rgb;
-        rgb = bufferedImage.getRGB(x, y);
-        return rgb;
+        return bufferedImage.getRGB(x, y);
     }
 
     //we want to ignore grey and black colors - they are not useful for us.
     private static boolean isGray(int[] rgb) {
-        int rgDiff = rgb[0] - rgb[1];
-        int rbDiff = rgb[0] - rgb[2];
+        int redGreenDifference = rgb[0] - rgb[1];
+        int redBlueDifference = rgb[0] - rgb[2];
 
         // Filter out black, white and grays w 10 pixel tolerance.
         int tolerance = 10;
-        if (rgDiff > tolerance || rgDiff < -tolerance)
-            if (rbDiff > tolerance || rbDiff < -tolerance) {
+        if (redGreenDifference > tolerance || redGreenDifference < -tolerance)
+            if (redBlueDifference > tolerance || redBlueDifference < -tolerance) {
                 return false;
             }
         return true;
     }
 
-    public Image makeImageGrayscale(Image originalImage) {
+    protected Image makeImageGrayscale(Image originalImage) {
         PImage pImage = new PImage(originalImage);
         PImage processed = Grayscale.apply(pImage);
         originalImage = processed.getImage();
@@ -107,7 +100,7 @@ public class Model {
         return originalImage;
     }
 
-    public Image makeImageNegative(Image originalImage) {
+    protected Image makeImageNegative(Image originalImage) {
         PImage pImage = new PImage(originalImage);
         PImage processed = InvertColors.apply(pImage, true, true, true);
         originalImage = processed.getImage();
@@ -115,7 +108,7 @@ public class Model {
         return originalImage;
     }
 
-    public Image makeImageThreshold(Image originalImage){
+    protected Image makeImageThreshold(Image originalImage){
         PImage pImage = new PImage(originalImage);
         PImage processed = Threshold.apply(pImage);
         originalImage = processed.getImage();
@@ -123,7 +116,7 @@ public class Model {
         return originalImage;
     }
 
-    public Image makeImageQuantize(Image originalImage){
+    protected Image makeImageQuantize(Image originalImage){
         PImage pImage = new PImage(originalImage);
         PImage processed = Quantization.apply(pImage, 3);
         originalImage = processed.getImage();
@@ -131,7 +124,7 @@ public class Model {
         return originalImage;
     }
 
-    public Image makeImagePixelate(Image originalImage){
+    protected Image makeImagePixelate(Image originalImage){
         PImage pImage = new PImage(originalImage);
         PImage processed = Pixelation.apply(pImage, 10);
         originalImage = processed.getImage();
@@ -139,7 +132,7 @@ public class Model {
         return originalImage;
     }
 
-    public Image makeImageEdgeDetect(Image originalImage){
+    protected Image makeImageEdgeDetect(Image originalImage){
         PImage pImage = new PImage(originalImage);
         PImage processed = CannyEdgeDetector.apply(pImage);
         originalImage = processed.getImage();
@@ -147,7 +140,7 @@ public class Model {
         return originalImage;
     }
 
-    public Image makeImageSobel(Image originalImage){
+    protected Image makeImageSobel(Image originalImage){
         PImage pImage = new PImage(originalImage);
         PImage processed = SobelEdgeDetector.apply(pImage);
         originalImage = processed.getImage();
@@ -155,7 +148,7 @@ public class Model {
         return originalImage;
     }
 
-    public Image makeImageDither(Image originalImage){
+    protected Image makeImageDither(Image originalImage){
         PImage pImage = new PImage(originalImage);
         PImage processed = Dithering.apply(pImage);
         originalImage = processed.getImage();

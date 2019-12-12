@@ -181,32 +181,4 @@ public class View extends JFrame {
         //add buttons to all canvas.
         contentPanel.add(radioPanel, BorderLayout.EAST);
     }
-
-    public ImageIcon getScaledImageIcon(Image srcImg){
-        ImageIcon icon = new ImageIcon(srcImg);
-        int width = -1; // -1 to preserve aspect ratio
-        int height = -1;
-        if (icon.getIconWidth() <= icon.getIconHeight()) {
-            height = imageIcon.getHeight();
-        }
-        else {
-            width = imageIcon.getWidth();
-        }
-        Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        icon = new ImageIcon(image, icon.getDescription());
-        return icon;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }//end class

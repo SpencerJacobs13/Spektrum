@@ -21,7 +21,6 @@ public class Controller extends JPanel implements ActionListener {
     private int allPixels;
     private int uniqueColors;
     private SQLiteHelper imageHelper;
-    //protected Image testImage;
 
     public Controller() {
         this.view = new View(this);
@@ -77,7 +76,6 @@ public class Controller extends JPanel implements ActionListener {
                    imageHelper.closeConnection();
                    System.exit(0);
                }else if(choice == JOptionPane.YES_OPTION){
-                   System.out.println("path before we add it to database: " + imagePath);
                    ImageInfo imageInfo = new ImageInfo(imageName, imagePath, allPixels, uniqueColors);
                    imageHelper.insertImage(imageInfo);
                    imageHelper.closeConnection();
@@ -207,13 +205,12 @@ public class Controller extends JPanel implements ActionListener {
             try {
                 bufferedImage = ImageIO.read(file);
             }catch(IOException e){
+                JOptionPane.showMessageDialog(null, "Could not read file type. \n  (Must be .jpg or .png)", "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
             image = bufferedImage;
             image = image.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
             bufferedImage = imageToBufferedImage(image);
-            //testImage = bufferedImage;
-            //testImage = testImage.getScaledInstance(view.imageIcon.getWidth(), view.imageIcon.getHeight(), Image.SCALE_SMOOTH);
             model = new Model(this, bufferedImage);
 
             ImageIcon icon = new ImageIcon(image);
@@ -262,3 +259,33 @@ public class Controller extends JPanel implements ActionListener {
     }
 
 }//end class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

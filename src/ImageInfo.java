@@ -1,9 +1,9 @@
 public class ImageInfo {
-    int id;
-    String name;
-    String path;
-    int allPixels;
-    int uniqueColors;
+    private int id;
+    private String name;
+    private String path;
+    private int allPixels;
+    private int uniqueColors;
 
     public ImageInfo(String name, String path, int allPixels, int uniqueColors) {
         this.name = name;

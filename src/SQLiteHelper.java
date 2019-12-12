@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SQLiteHelper {
-    static final String DATABASE_NAME = "databaseImages.db";
-    static final String CONNECTION_URL = "jdbc:sqlite:databases/" + DATABASE_NAME;
-    static final String ID = "id";
-    static final String IMAGE_PATH = "path";
-    static final String TABLE_IMAGES = "tableImages";
-    static final String NAME = "name";
-    static final String ALL_PIXELS = "allPixels";
-    static final String UNIQUE_COLORS = "uniqueColors";
-    protected Connection connection;
+    private static final String DATABASE_NAME = "databaseImages.db";
+    private static final String CONNECTION_URL = "jdbc:sqlite:databases/" + DATABASE_NAME;
+    private static final String ID = "id";
+    private static final String IMAGE_PATH = "path";
+    private static final String TABLE_IMAGES = "tableImages";
+    private static final String NAME = "name";
+    private static final String ALL_PIXELS = "allPixels";
+    private static final String UNIQUE_COLORS = "uniqueColors";
+    private Connection connection;
     protected List<ImageInfo> images;
 
     public SQLiteHelper(){
@@ -20,7 +20,7 @@ public class SQLiteHelper {
         createImagesTable();
     }
 
-    public void getConnection(){
+    private void getConnection(){
         try{
             connection = DriverManager.getConnection(CONNECTION_URL);
         }catch(SQLException e){
@@ -28,7 +28,7 @@ public class SQLiteHelper {
         }
     }
 
-    public void createImagesTable(){
+    private void createImagesTable(){
         String sqlCreate = "CREATE TABLE " + TABLE_IMAGES + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + NAME + " TEXT, " + IMAGE_PATH + " TEXT, " + ALL_PIXELS + " INTEGER, " + UNIQUE_COLORS + " INTEGER)";
         if(connection != null && !tableExists()){
